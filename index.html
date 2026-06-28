@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Atelier Allegretto — Medições Vibracionais</title>
+<title>Atelier Allegretto â€” MediÃ§Ãµes Vibracionais</title>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <style>
@@ -256,7 +256,7 @@ tr.diff-row td:first-child{text-align:left;padding-left:12px;font-size:11px;colo
     <div style="flex:1">
       <div class="brand-name">Atelier Allegretto</div>
       <div class="brand-sub">Lutheria</div>
-      <div class="app-title-txt">Medições vibracionais — análise acústica</div>
+      <div class="app-title-txt">MediÃ§Ãµes vibracionais â€” anÃ¡lise acÃºstica</div>
     </div>
     <div class="header-actions">
       <button class="btn-action" onclick="salvarJSON()">
@@ -265,7 +265,7 @@ tr.diff-row td:first-child{text-align:left;padding-left:12px;font-size:11px;colo
       <button class="btn-action" onclick="carregarJSON()" title="Abrir projeto salvo para continuar">
         <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>Abrir
       </button>
-      <button class="btn-action" onclick="exportarPDF()" title="Exportar relatório em PDF" style="border-color:#7a4a20;color:#e0b830">
+      <button class="btn-action" onclick="exportarPDF()" title="Exportar relatÃ³rio em PDF" style="border-color:#7a4a20;color:#e0b830">
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><text x="12" y="17" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="6" font-weight="800" fill="currentColor" stroke="none">PDF</text></svg>PDF
       </button>
       <button class="btn-action btn-print" onclick="imprimir()">
@@ -276,7 +276,7 @@ tr.diff-row td:first-child{text-align:left;padding-left:12px;font-size:11px;colo
 
   <div class="body-area">
     <div class="meta-grid">
-      <div class="field"><label>Modelo</label><input type="text" id="f-modelo" placeholder="Ex: Violino 4/4 — Spruce/Maple" oninput="S.modelo=this.value;agendarSalvar()"></div>
+      <div class="field"><label>Modelo</label><input type="text" id="f-modelo" placeholder="Ex: Violino 4/4 â€” Spruce/Maple" oninput="S.modelo=this.value;agendarSalvar()"></div>
       <div class="field"><label>Data</label><input type="date" id="f-data" oninput="S.data=this.value;agendarSalvar()"></div>
       <div class="field"><label>Cliente</label><input type="text" id="f-cliente" placeholder="Nome do cliente" oninput="S.cliente=this.value;agendarSalvar()"></div>
     </div>
@@ -284,17 +284,19 @@ tr.diff-row td:first-child{text-align:left;padding-left:12px;font-size:11px;colo
     <div class="obra-bar">
       <select class="obra-select" id="obra-select" onchange="switchObra(this.value)"></select>
       <button class="obra-btn" onclick="novaObra()">+ Nova</button>
-      <button class="obra-btn" onclick="renomearObra()">✎ Renomear</button>
-      <button class="obra-btn" onclick="excluirObra()">✕ Excluir</button>
-      <span class="sync-status sync-idle" id="sync-status">○ Iniciando...</span>
+      <button class="obra-btn" onclick="renomearObra()">âœŽ Renomear</button>
+      <button class="obra-btn" onclick="excluirObra()">âœ• Excluir</button>
+      <span class="sync-status sync-idle" id="sync-status">â—‹ Iniciando...</span>
     </div>
 
     <div class="tabs-bar">
-      <button class="tab-btn active" onclick="switchTab('tampo',this)">▲ Tampo</button>
-      <button class="tab-btn" onclick="switchTab('fundo',this)">▽ Fundo</button>
-      <button class="tab-btn" onclick="switchTab('acabamento',this)">◆ Acabamento</button>
+      <button class="tab-btn active" onclick="switchTab('tampo',this)">â–² Tampo</button>
+      <button class="tab-btn" onclick="switchTab('fundo',this)">â–½ Fundo</button>
+      <button class="tab-btn" onclick="switchTab('acabamento',this)">â—† Acabamento</button>
+      <button class="tab-btn" onclick="switchTab('frequencia',this)">ðŸŽµ FrequÃªncias</button>
     </div>
     <div id="main-panel"></div>
+    <div id="freq-panel" style="display:none"></div>
   </div>
   <input type="file" id="file-input" accept=".json" style="display:none" onchange="lerArquivo(this)">
 </div>
@@ -305,8 +307,8 @@ var S={modelo:'',data:new Date().toISOString().slice(0,10),cliente:'',activeTab:
   fundo:[{m1:'',m2:'',m5:'',peso:''},{m1:'',m2:'',m5:'',peso:''}],
   interno:[],externo:[],vernizTipo:'',camadas:0};
 
-var INTERNO=['Água de cola','Caseína','Breu queimado','Chá de cavalinha','Pó de pedra-pomes','Albumina','Aloe + goma-laca','Mastique + pedra-pomes','Caseína + pedra-pomes'];
-var EXTERNO=['Água de cola','Caseína','Caseína + cálcio','Caseína + pedra-pomes','Breu queimado','Chá de cavalinha','Pó de pedra-pomes','Albumina','Aloe + goma-laca'];
+var INTERNO=['Ãgua de cola','CaseÃ­na','Breu queimado','ChÃ¡ de cavalinha','PÃ³ de pedra-pomes','Albumina','Aloe + goma-laca','Mastique + pedra-pomes','CaseÃ­na + pedra-pomes'];
+var EXTERNO=['Ãgua de cola','CaseÃ­na','CaseÃ­na + cÃ¡lcio','CaseÃ­na + pedra-pomes','Breu queimado','ChÃ¡ de cavalinha','PÃ³ de pedra-pomes','Albumina','Aloe + goma-laca'];
 
 // === CLOUD SYNC (Firebase Firestore) ===
 firebase.initializeApp({
@@ -415,20 +417,20 @@ function salvarCloud(){
   console.log('Salvando no localStorage...');
   localStorage.setItem('allegretto_obras',JSON.stringify(data));
   console.log('Salvo no localStorage');
-  setSyncStatus('saving','⟳ Salvando...');
+  setSyncStatus('saving','âŸ³ Salvando...');
   DOC_REF.set(data).then(function(){
     console.log('Salvo no Firestore com sucesso');
-    setSyncStatus('saved','✓ Salvo na nuvem');
+    setSyncStatus('saved','âœ“ Salvo na nuvem');
     syncPendente=false;
   }).catch(function(err){
     console.error('Erro ao salvar no Firestore:', err);
-    setSyncStatus('error','✗ Erro ao salvar');
+    setSyncStatus('error','âœ— Erro ao salvar');
     syncPendente=false;
   });
 }
 
 function carregarCloud(){
-  setSyncStatus('saving','⟳ Carregando...');
+  setSyncStatus('saving','âŸ³ Carregando...');
   var local=localStorage.getItem('allegretto_obras');
   console.log('localStorage data:', local ? 'encontrado' : 'vazio');
   if(local){
@@ -436,7 +438,7 @@ function carregarCloud(){
       var p=JSON.parse(local);
       obrasData=p.obras||{};
       obraAtiva=p.currentObraId||'';
-      if(Object.keys(obrasData).length===0){obrasData['padrao']={nome:'Obra padrão'};obraAtiva='padrao';}
+      if(Object.keys(obrasData).length===0){obrasData['padrao']={nome:'Obra padrÃ£o'};obraAtiva='padrao';}
       if(!obrasData[obraAtiva])obraAtiva=Object.keys(obrasData)[0];
       carregarObra(obraAtiva);
       console.log('Carregado do localStorage, obra ativa:', obraAtiva);
@@ -457,18 +459,18 @@ function carregarCloud(){
         obrasData=data.obras||{};
         obraAtiva=data.currentObraId||'';
       }
-      if(Object.keys(obrasData).length===0){obrasData['padrao']={nome:'Obra padrão'};obraAtiva='padrao';}
+      if(Object.keys(obrasData).length===0){obrasData['padrao']={nome:'Obra padrÃ£o'};obraAtiva='padrao';}
       Object.keys(obrasData).forEach(function(id){if(typeof obrasData[id]==='object'&&!obrasData[id].nome)obrasData[id].nome=id;});
       if(!obrasData[obraAtiva])obraAtiva=Object.keys(obrasData)[0];
       localStorage.setItem('allegretto_obras',JSON.stringify({obras:obrasData,currentObraId:obraAtiva}));
       carregarObra(obraAtiva);
-      setSyncStatus('saved','✓ Sincronizado');
+      setSyncStatus('saved','âœ“ Sincronizado');
     }else{
-      if(!local)setSyncStatus('idle','○ Nenhum dado na nuvem');else setSyncStatus('idle','○ Offline (cache)');
+      if(!local)setSyncStatus('idle','â—‹ Nenhum dado na nuvem');else setSyncStatus('idle','â—‹ Offline (cache)');
     }
   }).catch(function(err){
     console.error(err);
-    if(local)setSyncStatus('idle','○ Offline (cache)');else setSyncStatus('error','✗ Sem conexão');
+    if(local)setSyncStatus('idle','â—‹ Offline (cache)');else setSyncStatus('error','âœ— Sem conexÃ£o');
   });
 }
 
@@ -478,8 +480,8 @@ function agendarSalvar(){
 }
 
 function e(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function dv(a,b){if(a===''||b==='')return'—';var d=parseFloat(b)-parseFloat(a);return(d>=0?'+':'')+d.toFixed(1);}
-function dc(v){if(v==='—')return'diff-zero';return parseFloat(v)>0?'diff-pos':parseFloat(v)<0?'diff-neg':'diff-zero';}
+function dv(a,b){if(a===''||b==='')return'â€”';var d=parseFloat(b)-parseFloat(a);return(d>=0?'+':'')+d.toFixed(1);}
+function dc(v){if(v==='â€”')return'diff-zero';return parseFloat(v)>0?'diff-pos':parseFloat(v)<0?'diff-neg':'diff-zero';}
 
 var WM='<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><g transform="translate(40,40) rotate(45)"><rect x="-26" y="-26" width="52" height="52" fill="none" stroke="#c9a227" stroke-width="2.5"/><rect x="-21" y="-21" width="42" height="42" fill="none" stroke="#c9a227" stroke-width="1"/><rect x="-18" y="-18" width="36" height="36" fill="none" stroke="#c9a227" stroke-width="1.5"/><rect x="-22" y="-4" width="8" height="8" fill="#c9a227"/><rect x="14" y="-4" width="8" height="8" fill="#c9a227"/><rect x="-4" y="-22" width="8" height="8" fill="#c9a227"/><rect x="-4" y="14" width="8" height="8" fill="#c9a227"/></g><text x="40" y="46" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#c9a227">A</text></svg>';
 
@@ -488,34 +490,34 @@ function panelWrap(c){return '<div class="panel"><div class="panel-watermark">'+
 function renderTable(type){
   var isTampo=type==='tampo',rows=S[type];
   var h='<div class="tbl-wrap"><table><thead><tr>';
-  h+='<th style="width:115px;text-align:left;padding-left:12px">Medição</th>';
+  h+='<th style="width:115px;text-align:left;padding-left:12px">MediÃ§Ã£o</th>';
   [{l:'Modo 1',u:'Hz'},{l:'Modo 2',u:'Hz'},{l:'Modo 5',u:'Hz'},{l:'Peso',u:'g'}].forEach(function(c){
     h+='<th>'+c.l+'<br><small style="font-weight:500;text-transform:none;letter-spacing:0;color:#9a7840">'+c.u+'</small></th>';
   });
   if(isTampo)h+='<th>FFS</th><th>Barra harm.</th>';
   h+='</tr></thead><tbody>';
   rows.forEach(function(row,i){
-    h+='<tr class="data-row"><td><span class="row-num">'+(i+1)+'</span>Medição '+(i+1)+'</td>';
+    h+='<tr class="data-row"><td><span class="row-num">'+(i+1)+'</span>MediÃ§Ã£o '+(i+1)+'</td>';
     ['m1','m2','m5','peso'].forEach(function(f){
       h+='<td><input class="num-in" type="number" step="0.1" value="'+e(row[f])+'" onchange="setV(\''+type+'\','+i+',\''+f+'\',this.value)"></td>';
     });
     if(isTampo){
       ['ffs','barra'].forEach(function(f){
         var v=row[f],cls='sel-in'+(v==='sim'?' sel-sim':v==='nao'?' sel-nao':'');
-        h+='<td><select class="'+cls+'" onchange="setV(\''+type+'\','+i+',\''+f+'\',this.value);this.className=\'sel-in\'+(this.value===\'sim\'?\' sel-sim\':this.value===\'nao\'?\' sel-nao\':\'\')"><option value="">—</option><option value="sim"'+(v==='sim'?' selected':'')+'>Sim</option><option value="nao"'+(v==='nao'?' selected':'')+'>Não</option></select></td>';
+        h+='<td><select class="'+cls+'" onchange="setV(\''+type+'\','+i+',\''+f+'\',this.value);this.className=\'sel-in\'+(this.value===\'sim\'?\' sel-sim\':this.value===\'nao\'?\' sel-nao\':\'\')"><option value="">â€”</option><option value="sim"'+(v==='sim'?' selected':'')+'>Sim</option><option value="nao"'+(v==='nao'?' selected':'')+'>NÃ£o</option></select></td>';
       });
     }
     h+='</tr>';
     if(i>0){
       var p=rows[i-1];
-      h+='<tr class="diff-row"><td>Δ '+(i)+'→'+(i+1)+'</td>';
+      h+='<tr class="diff-row"><td>Î” '+(i)+'â†’'+(i+1)+'</td>';
       ['m1','m2','m5','peso'].forEach(function(f){var d=dv(p[f],row[f]);h+='<td class="'+dc(d)+'">'+d+'</td>';});
-      if(isTampo)h+='<td>—</td><td>—</td>';
+      if(isTampo)h+='<td>â€”</td><td>â€”</td>';
       h+='</tr>';
     }
   });
   h+='</tbody></table></div>';
-  h+='<button class="btn-add" onclick="addRow(\''+type+'\')"><svg width="13" height="13" viewBox="0 0 13 13" stroke="currentColor" fill="none" stroke-width="2.2"><line x1="6.5" y1="1" x2="6.5" y2="12"/><line x1="1" y1="6.5" x2="12" y2="6.5"/></svg> Nova medição</button>';
+  h+='<button class="btn-add" onclick="addRow(\''+type+'\')"><svg width="13" height="13" viewBox="0 0 13 13" stroke="currentColor" fill="none" stroke-width="2.2"><line x1="6.5" y1="1" x2="6.5" y2="12"/><line x1="1" y1="6.5" x2="12" y2="6.5"/></svg> Nova mediÃ§Ã£o</button>';
   return h;
 }
 
@@ -523,10 +525,10 @@ function renderResumoTampo(){
   var rows=S.tampo;
   var temAlgumDado=rows.some(function(r){return r.m1!==''||r.m2!==''||r.m5!==''||r.peso!==''||r.ffs!==''||r.barra!=='';});
   if(rows.length<2){
-    if(temAlgumDado)return'<div class="resumo-empty-tampo">Adicione mais medições para visualizar as diferenças.</div>';
-    return'<div class="resumo-empty-tampo">Adicione pelo menos 2 medições para gerar o resumo de alterações.</div>';
+    if(temAlgumDado)return'<div class="resumo-empty-tampo">Adicione mais mediÃ§Ãµes para visualizar as diferenÃ§as.</div>';
+    return'<div class="resumo-empty-tampo">Adicione pelo menos 2 mediÃ§Ãµes para gerar o resumo de alteraÃ§Ãµes.</div>';
   }
-  var h='<div class="resumo-tampo"><div class="resumo-tampo-header"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Resumo das alterações — Tampo</div><div class="resumo-tampo-body">';
+  var h='<div class="resumo-tampo"><div class="resumo-tampo-header"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Resumo das alteraÃ§Ãµes â€” Tampo</div><div class="resumo-tampo-body">';
   var temMudanca=false;
   for(var i=1;i<rows.length;i++){
     var p=rows[i-1],c=rows[i],parts=[];
@@ -534,37 +536,37 @@ function renderResumoTampo(){
       var f=fl[0],lbl=fl[1],un=fl[2];
       if(p[f]!==''&&c[f]!==''){
         var d=parseFloat(c[f])-parseFloat(p[f]);
-        var arr=d>0?'↑':d<0?'↓':'→';
+        var arr=d>0?'â†‘':d<0?'â†“':'â†’';
         var cls=d>0?'diff-pos':d<0?'diff-neg':'diff-zero';
-        parts.push('<div class="resumo-row '+cls+'"><span class="resumo-label">'+lbl+':</span><span class="resumo-value">'+p[f]+' → '+c[f]+' '+un+'</span><span class="resumo-delta">'+(d>=0?'+':'')+d.toFixed(1)+' '+un+' '+arr+'</span></div>');
+        parts.push('<div class="resumo-row '+cls+'"><span class="resumo-label">'+lbl+':</span><span class="resumo-value">'+p[f]+' â†’ '+c[f]+' '+un+'</span><span class="resumo-delta">'+(d>=0?'+':'')+d.toFixed(1)+' '+un+' '+arr+'</span></div>');
       }
     });
     if(p.peso!==''&&c.peso!==''){
       var pd=parseFloat(c.peso)-parseFloat(p.peso);
-      var parr=pd>0?'↑':pd<0?'↓':'→';
+      var parr=pd>0?'â†‘':pd<0?'â†“':'â†’';
       var pcls=pd>0?'diff-pos':pd<0?'diff-neg':'diff-zero';
-      parts.push('<div class="resumo-row '+pcls+'"><span class="resumo-label">Peso:</span><span class="resumo-value">'+p.peso+' → '+c.peso+' g</span><span class="resumo-delta">'+(pd>=0?'+':'')+pd.toFixed(1)+' g '+parr+'</span></div>');
+      parts.push('<div class="resumo-row '+pcls+'"><span class="resumo-label">Peso:</span><span class="resumo-value">'+p.peso+' â†’ '+c.peso+' g</span><span class="resumo-delta">'+(pd>=0?'+':'')+pd.toFixed(1)+' g '+parr+'</span></div>');
     }
     if(p.ffs!==c.ffs){
       var fcls,fdesc;
-      if(p.ffs===''&&c.ffs!==''){fcls=c.ffs==='sim'?'diff-active':'diff-inactive';fdesc=c.ffs==='sim'?'ativado':'marcado não';}
+      if(p.ffs===''&&c.ffs!==''){fcls=c.ffs==='sim'?'diff-active':'diff-inactive';fdesc=c.ffs==='sim'?'ativado':'marcado nÃ£o';}
       else if(p.ffs!==''&&c.ffs===''){fcls='diff-zero';fdesc='removido';}
       else{fcls=c.ffs==='sim'?'diff-active':'diff-inactive';fdesc='alterado';}
-      parts.push('<div class="resumo-row '+fcls+'"><span class="resumo-label">FFS:</span><span class="resumo-value">'+(p.ffs||'—')+' → '+(c.ffs||'—')+'</span><span class="resumo-delta">'+fdesc+'</span></div>');
+      parts.push('<div class="resumo-row '+fcls+'"><span class="resumo-label">FFS:</span><span class="resumo-value">'+(p.ffs||'â€”')+' â†’ '+(c.ffs||'â€”')+'</span><span class="resumo-delta">'+fdesc+'</span></div>');
     }
     if(p.barra!==c.barra){
       var bcls,bdesc;
-      if(p.barra===''&&c.barra!==''){bcls=c.barra==='sim'?'diff-active':'diff-inactive';bdesc=c.barra==='sim'?'ativada':'marcada não';}
+      if(p.barra===''&&c.barra!==''){bcls=c.barra==='sim'?'diff-active':'diff-inactive';bdesc=c.barra==='sim'?'ativada':'marcada nÃ£o';}
       else if(p.barra!==''&&c.barra===''){bcls='diff-zero';bdesc='removida';}
       else{bcls=c.barra==='sim'?'diff-active':'diff-inactive';bdesc='alterada';}
-      parts.push('<div class="resumo-row '+bcls+'"><span class="resumo-label">Barra harm.:</span><span class="resumo-value">'+(p.barra||'—')+' → '+(c.barra||'—')+'</span><span class="resumo-delta">'+bdesc+'</span></div>');
+      parts.push('<div class="resumo-row '+bcls+'"><span class="resumo-label">Barra harm.:</span><span class="resumo-value">'+(p.barra||'â€”')+' â†’ '+(c.barra||'â€”')+'</span><span class="resumo-delta">'+bdesc+'</span></div>');
     }
     if(parts.length>0){
       temMudanca=true;
-      h+='<div class="resumo-card"><div class="resumo-card-title">Medição '+i+' → '+(i+1)+'</div><div class="resumo-grid">'+parts.join('')+'</div></div>';
+      h+='<div class="resumo-card"><div class="resumo-card-title">MediÃ§Ã£o '+i+' â†’ '+(i+1)+'</div><div class="resumo-grid">'+parts.join('')+'</div></div>';
     }
   }
-  if(!temMudanca)h+='<div class="resumo-empty-tampo">Nenhuma alteração detectada entre as medições preenchidas.</div>';
+  if(!temMudanca)h+='<div class="resumo-empty-tampo">Nenhuma alteraÃ§Ã£o detectada entre as mediÃ§Ãµes preenchidas.</div>';
   h+='</div></div>';
   return h;
 }
@@ -573,47 +575,47 @@ function renderTableMobile(type){
   var isTampo=type==='tampo',rows=S[type];
   var h='<div class="mob-list">';
   rows.forEach(function(row,i){
-    h+='<div class="mob-card"><div class="mob-card-title"><span class="row-num">'+(i+1)+'</span>Medição '+(i+1)+'</div><div class="mob-card-grid">';
+    h+='<div class="mob-card"><div class="mob-card-title"><span class="row-num">'+(i+1)+'</span>MediÃ§Ã£o '+(i+1)+'</div><div class="mob-card-grid">';
     [{k:'m1',l:'Modo 1',u:'Hz'},{k:'m2',l:'Modo 2',u:'Hz'},{k:'m5',l:'Modo 5',u:'Hz'},{k:'peso',l:'Peso',u:'g'}].forEach(function(f){
       h+='<div class="mob-field"><label>'+f.l+' <span class="mob-unit">'+f.u+'</span></label><input class="num-in" type="number" step="0.1" value="'+e(row[f.k])+'" onchange="setV(\''+type+'\','+i+',\''+f.k+'\',this.value)"></div>';
     });
     if(isTampo){
       var fv=row.ffs,fcls='sel-in'+(fv==='sim'?' sel-sim':fv==='nao'?' sel-nao':'');
-      h+='<div class="mob-field"><label>FFS</label><select class="'+fcls+'" onchange="setV(\''+type+'\','+i+',\'ffs\',this.value);this.className=\'sel-in\'+(this.value===\'sim\'?\' sel-sim\':this.value===\'nao\'?\' sel-nao\':\'\')"><option value="">—</option><option value="sim"'+(fv==='sim'?' selected':'')+'>Sim</option><option value="nao"'+(fv==='nao'?' selected':'')+'>Não</option></select></div>';
+      h+='<div class="mob-field"><label>FFS</label><select class="'+fcls+'" onchange="setV(\''+type+'\','+i+',\'ffs\',this.value);this.className=\'sel-in\'+(this.value===\'sim\'?\' sel-sim\':this.value===\'nao\'?\' sel-nao\':\'\')"><option value="">â€”</option><option value="sim"'+(fv==='sim'?' selected':'')+'>Sim</option><option value="nao"'+(fv==='nao'?' selected':'')+'>NÃ£o</option></select></div>';
       var bv=row.barra,bcls='sel-in'+(bv==='sim'?' sel-sim':bv==='nao'?' sel-nao':'');
-      h+='<div class="mob-field"><label>Barra harm.</label><select class="'+bcls+'" onchange="setV(\''+type+'\','+i+',\'barra\',this.value);this.className=\'sel-in\'+(this.value===\'sim\'?\' sel-sim\':this.value===\'nao\'?\' sel-nao\':\'\')"><option value="">—</option><option value="sim"'+(bv==='sim'?' selected':'')+'>Sim</option><option value="nao"'+(bv==='nao'?' selected':'')+'>Não</option></select></div>';
+      h+='<div class="mob-field"><label>Barra harm.</label><select class="'+bcls+'" onchange="setV(\''+type+'\','+i+',\'barra\',this.value);this.className=\'sel-in\'+(this.value===\'sim\'?\' sel-sim\':this.value===\'nao\'?\' sel-nao\':\'\')"><option value="">â€”</option><option value="sim"'+(bv==='sim'?' selected':'')+'>Sim</option><option value="nao"'+(bv==='nao'?' selected':'')+'>NÃ£o</option></select></div>';
     }
     h+='</div></div>';
     if(i>0){
       var p=rows[i-1];
-      h+='<div class="mob-diff"><div class="mob-diff-title">Diferenças Medição '+i+' → '+(i+1)+'</div><div class="mob-diff-grid">';
+      h+='<div class="mob-diff"><div class="mob-diff-title">DiferenÃ§as MediÃ§Ã£o '+i+' â†’ '+(i+1)+'</div><div class="mob-diff-grid">';
       ['m1','m2','m5','peso'].forEach(function(f){
         var d=dv(p[f],row[f]);
-        h+='<div class="mob-diff-row '+dc(d)+'"><span class="mob-diff-label">'+(f==='peso'?'Peso':'Modo '+f.charAt(1))+':</span><span class="mob-diff-value">'+d+(d!=='—'?(f==='peso'?' g':' Hz'):'')+'</span></div>';
+        h+='<div class="mob-diff-row '+dc(d)+'"><span class="mob-diff-label">'+(f==='peso'?'Peso':'Modo '+f.charAt(1))+':</span><span class="mob-diff-value">'+d+(d!=='â€”'?(f==='peso'?' g':' Hz'):'')+'</span></div>';
       });
       if(isTampo){
-        h+='<div class="mob-diff-row"><span class="mob-diff-label">FFS:</span><span class="mob-diff-value">'+(p.ffs||'—')+' → '+(row.ffs||'—')+'</span></div>';
-        h+='<div class="mob-diff-row"><span class="mob-diff-label">Barra:</span><span class="mob-diff-value">'+(p.barra||'—')+' → '+(row.barra||'—')+'</span></div>';
+        h+='<div class="mob-diff-row"><span class="mob-diff-label">FFS:</span><span class="mob-diff-value">'+(p.ffs||'â€”')+' â†’ '+(row.ffs||'â€”')+'</span></div>';
+        h+='<div class="mob-diff-row"><span class="mob-diff-label">Barra:</span><span class="mob-diff-value">'+(p.barra||'â€”')+' â†’ '+(row.barra||'â€”')+'</span></div>';
       }
       h+='</div></div>';
     }
   });
   h+='</div>';
-  h+='<button class="btn-add" onclick="addRow(\''+type+'\')"><svg width="13" height="13" viewBox="0 0 13 13" stroke="currentColor" fill="none" stroke-width="2.2"><line x1="6.5" y1="1" x2="6.5" y2="12"/><line x1="1" y1="6.5" x2="12" y2="6.5"/></svg> Nova medição</button>';
+  h+='<button class="btn-add" onclick="addRow(\''+type+'\')"><svg width="13" height="13" viewBox="0 0 13 13" stroke="currentColor" fill="none" stroke-width="2.2"><line x1="6.5" y1="1" x2="6.5" y2="12"/><line x1="1" y1="6.5" x2="12" y2="6.5"/></svg> Nova mediÃ§Ã£o</button>';
   return h;
 }
 
 function renderAcabamento(){
   var h='';
-  h+='<div class="sec-title">Preparação interna</div><div class="chk-grid">';
+  h+='<div class="sec-title">PreparaÃ§Ã£o interna</div><div class="chk-grid">';
   INTERNO.forEach(function(o){var chk=S.interno.indexOf(o)>=0;h+='<label class="chk-label'+(chk?' checked':'')+'"><input type="checkbox"'+(chk?' checked':'')+' onchange="toggleL(\'interno\',\''+e(o)+'\',this.checked);this.parentNode.classList.toggle(\'checked\',this.checked);renderResumo()"> '+e(o)+'</label>';});
-  h+='</div><div class="sec-title">Preparação externa</div><div class="chk-grid">';
+  h+='</div><div class="sec-title">PreparaÃ§Ã£o externa</div><div class="chk-grid">';
   EXTERNO.forEach(function(o){var chk=S.externo.indexOf(o)>=0;h+='<label class="chk-label'+(chk?' checked':'')+'"><input type="checkbox"'+(chk?' checked':'')+' onchange="toggleL(\'externo\',\''+e(o)+'\',this.checked);this.parentNode.classList.toggle(\'checked\',this.checked);renderResumo()"> '+e(o)+'</label>';});
   h+='</div><div class="sec-title">Tipo de verniz</div><div class="verniz-tipos">';
-  [['oleo','Verniz a óleo'],['misto','Verniz misto']].forEach(function(pair){var sel=S.vernizTipo===pair[0];h+='<label class="vtype-card'+(sel?' selected':'')+'"><input type="radio" name="vtype" value="'+pair[0]+'"'+(sel?' checked':'')+' onchange="S.vernizTipo=this.value;render()"> '+pair[1]+'</label>';});
-  h+='</div><div class="sec-title">Número de demãos</div><div class="camadas-row"><label>Quantidade de passagens:</label>';
+  [['oleo','Verniz a Ã³leo'],['misto','Verniz misto']].forEach(function(pair){var sel=S.vernizTipo===pair[0];h+='<label class="vtype-card'+(sel?' selected':'')+'"><input type="radio" name="vtype" value="'+pair[0]+'"'+(sel?' checked':'')+' onchange="S.vernizTipo=this.value;render()"> '+pair[1]+'</label>';});
+  h+='</div><div class="sec-title">NÃºmero de demÃ£os</div><div class="camadas-row"><label>Quantidade de passagens:</label>';
   h+='<input type="number" min="0" max="50" value="'+S.camadas+'" onchange="S.camadas=parseInt(this.value)||0;renderResumo();agendarSalvar()">';
-  if(S.camadas>0)h+='<span class="badge-demao">'+S.camadas+' demão'+(S.camadas!==1?'s':'')+'</span>';
+  if(S.camadas>0)h+='<span class="badge-demao">'+S.camadas+' demÃ£o'+(S.camadas!==1?'s':'')+'</span>';
   h+='</div><div id="resumo-area"></div>';
   return h;
 }
@@ -623,8 +625,8 @@ function renderResumo(){
   var items=[];
   S.interno.forEach(function(o){items.push({label:o,tag:'int',tagLabel:'Interno'});});
   S.externo.forEach(function(o){items.push({label:o,tag:'ext',tagLabel:'Externo'});});
-  if(S.vernizTipo){var vl=S.vernizTipo==='oleo'?'Verniz a óleo':'Verniz misto',suf=S.camadas>0?' — '+S.camadas+' demão'+(S.camadas!==1?'s':''):'';items.push({label:vl+suf,tag:'verniz',tagLabel:'Verniz'});}
-  var h='<div class="resumo-box"><div class="resumo-header"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Sequência de acabamento selecionada</div><div class="resumo-body">';
+  if(S.vernizTipo){var vl=S.vernizTipo==='oleo'?'Verniz a Ã³leo':'Verniz misto',suf=S.camadas>0?' â€” '+S.camadas+' demÃ£o'+(S.camadas!==1?'s':''):'';items.push({label:vl+suf,tag:'verniz',tagLabel:'Verniz'});}
+  var h='<div class="resumo-box"><div class="resumo-header"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>SequÃªncia de acabamento selecionada</div><div class="resumo-body">';
   if(items.length===0){h+='<div class="resumo-empty">Nenhum produto selecionado ainda.</div>';}
   else{h+='<ol class="seq-list">';items.forEach(function(it,i){h+='<li class="seq-item"><span class="seq-num">'+(i+1)+'</span><span>'+e(it.label)+'</span><span class="seq-tag tag-'+it.tag+'">'+it.tagLabel+'</span></li>';});h+='</ol>';}
   h+='</div></div>';
@@ -634,10 +636,13 @@ function renderResumo(){
 function isMobile(){return window.matchMedia&&window.matchMedia('(max-width:768px)').matches;}
 function render(){
   var p=document.getElementById('main-panel');if(!p)return;
+  var fp=document.getElementById('freq-panel');if(fp)fp.style.display='none';
+  p.style.display='';
   var c='';
   if(S.activeTab==='tampo')c=(isMobile()?renderTableMobile('tampo'):renderTable('tampo'))+renderResumoTampo();
   else if(S.activeTab==='fundo')c=isMobile()?renderTableMobile('fundo'):renderTable('fundo');
-  else c=renderAcabamento();
+  else if(S.activeTab==='acabamento')c=renderAcabamento();
+  else if(S.activeTab==='frequencia'){p.style.display='none';fp.style.display='';renderFreqGenerator();return;}
   p.innerHTML=panelWrap(c);
   document.getElementById('f-data').value=S.data;
   if(S.activeTab==='acabamento')renderResumo();
@@ -645,6 +650,48 @@ function render(){
 }
 
 function switchTab(t,el){S.activeTab=t;document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});el.classList.add('active');render();}
+
+function renderFreqGenerator(){
+  var fp=document.getElementById('freq-panel');
+  fp.innerHTML='<div class="panel"><div class="panel-content"><div id="freq-gen-app"></div></div></div>';
+  var h='<style>.fg-wrap{max-width:620px;margin:0 auto}.fg-card{background:#fff;border:1px solid #e0deda;border-radius:12px;padding:16px 20px;margin-bottom:12px}.fg-sec{font-size:11px;font-weight:500;color:#888780;letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px}.fg-lbl{font-size:12px;color:#888780}.fg-big{font-size:40px;font-weight:500;font-family:Consolas,monospace;color:#1a1a18;letter-spacing:-1px}.fg-note{font-size:16px;color:#888780;margin-left:10px;font-family:Consolas,monospace}.fg-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}.fg-col{display:flex;flex-direction:column;gap:5px}.fg-status{display:flex;align-items:center;gap:6px;margin-top:4px}.fg-dot{width:8px;height:8px;border-radius:50%;background:#d0ceca;flex-shrink:0}.fg-dot.play{background:#3b8f4e}.fg-dot.sweep{background:#b07d1a}.fg-stxt{font-size:12px;color:#888780}input[type=range]{flex:1;min-width:100px;height:4px;accent-color:#2c6fbf;cursor:pointer}input[type=number]{padding:6px 10px;border-radius:7px;border:1px solid #d0ceca;background:#f9f9f7;color:#1a1a18;font-size:13px;font-family:Consolas,monospace;width:80px}input[type=number]:focus{outline:2px solid #2c6fbf;outline-offset:1px}.fg-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;border-radius:8px;border:1px solid #c8c6c0;background:#fff;font-size:14px;font-weight:500;color:#1a1a18;cursor:pointer;margin-top:2px}.fg-btn:hover{background:#f5f5f2}.fg-btn.on-play{background:#e6f5ea;border-color:#7ecb8e;color:#1f6631}.fg-btn.on-sweep{background:#fdf2da;border-color:#e8c060;color:#7a5210}.fg-dir{padding:5px 13px;border-radius:7px;border:1px solid #d0ceca;background:#fff;font-size:13px;color:#888780;cursor:pointer}.fg-dir:hover{background:#f5f5f2}.fg-dir.active{background:#ddeaf9;border-color:#88b0e0;color:#1a4f8a;font-weight:500}.fg-sinfo{font-size:12px;color:#888780;font-family:Consolas,monospace;margin:6px 0 4px}.fg-barw{height:6px;background:#f0ede8;border-radius:3px;border:1px solid #e0deda;overflow:hidden;margin:8px 0 12px}.fg-bar{height:100%;background:#e8a820;border-radius:3px;width:0%;transition:width .12s linear}.fg-vdisp{font-size:13px;font-weight:500;min-width:44px;text-align:right;color:#1a1a18}canvas{display:block;width:100%;height:60px;background:#f5f5f2;border:1px solid #e0deda;border-radius:8px;margin-top:12px}</style>';
+  h+='<div class="fg-wrap"><h2 style="font-size:18px;font-weight:500;color:#1a1a18;margin-bottom:16px">Gerador de FrequÃªncias</h2>';
+  h+='<div class="fg-card"><div style="display:flex;align-items:baseline;justify-content:space-between"><div><span class="fg-big" id="fg-dispFreq">440.00</span><span style="font-size:20px;color:#888780;font-family:monospace"> Hz</span><span class="fg-note" id="fg-dispNote">A4</span></div></div>';
+  h+='<div class="fg-status"><span class="fg-dot" id="fg-sdot"></span><span class="fg-stxt" id="fg-statusTxt">parado</span></div>';
+  h+='<canvas id="fg-wc"></canvas></div>';
+  h+='<div class="fg-card"><div class="fg-sec">Controle manual</div>';
+  h+='<div class="fg-row"><span class="fg-lbl" style="min-width:64px">FrequÃªncia</span><input type="range" id="fg-freqSlider" min="65" max="1500" value="440" step="1"><input type="number" id="fg-freqNum" min="65" max="1500" value="440" step="1"><span class="fg-lbl">Hz</span></div>';
+  h+='<div class="fg-row"><span class="fg-lbl" style="min-width:64px">Volume</span><input type="range" id="fg-volSlider" min="0" max="100" value="60" step="1"><span class="fg-vdisp" id="fg-volVal">60%</span></div>';
+  h+='<button class="fg-btn" id="fg-btnPlay"><span id="fg-playTxt">Tocar</span></button></div>';
+  h+='<div class="fg-card"><div class="fg-sec">Varredura automÃ¡tica</div>';
+  h+='<div class="fg-row" style="gap:14px"><div class="fg-col"><span class="fg-lbl">De (Hz)</span><input type="number" id="fg-swFrom" min="65" max="1500" value="65" step="1"></div><div class="fg-col"><span class="fg-lbl">AtÃ© (Hz)</span><input type="number" id="fg-swTo" min="65" max="1500" value="1500" step="1"></div><div class="fg-col"><span class="fg-lbl">Passo (Hz)</span><input type="number" id="fg-swStep" min="1" max="200" value="5" step="1"></div><div class="fg-col"><span class="fg-lbl">Intervalo (s)</span><input type="number" id="fg-swInterval" min="0.1" max="10" value="1" step="0.1"></div></div>';
+  h+='<div class="fg-row" style="margin-top:4px;gap:8px"><span class="fg-lbl">DireÃ§Ã£o:</span><button class="fg-dir active" id="fg-dirUp" onclick="fgSetDir(\'up\')">&#8593; Subindo</button><button class="fg-dir" id="fg-dirDown" onclick="fgSetDir(\'down\')">&#8595; Descendo</button><button class="fg-dir" id="fg-dirBounce" onclick="fgSetDir(\'bounce\')">&#8597; Ida e volta</button></div>';
+  h+='<div class="fg-sinfo" id="fg-stepInfo">65 Hz â†’ 1500 Hz â†‘, passo 5 Hz, a cada 1.0 s</div><div class="fg-barw"><div class="fg-bar" id="fg-sweepBar"></div></div>';
+  h+='<button class="fg-btn" id="fg-btnSweep"><span id="fg-sweepTxt">Iniciar varredura</span></button></div></div>';
+  document.getElementById('fg-gen-app').innerHTML=h;
+  fgInit();
+}
+
+var fgAudioCtx=null,fgOsc=null,fgGain=null,fgPlaying=false,fgSweeping=false,fgSweepDir='up',fgSweepTimer=null,fgBounceDir=1,fgFreq=440,fgAnimRAF=null,fgAnimT=0;
+function fgGetCtx(){if(!fgAudioCtx)fgAudioCtx=new(window.AudioContext||window.webkitAudioContext)();if(fgAudioCtx.state==='suspended')fgAudioCtx.resume();return fgAudioCtx;}
+function fgGetVol(){return(document.getElementById('fg-volSlider')||{}).value/100*0.65;}
+function fgEnsureOsc(){if(fgOsc)return;var ctx=fgGetCtx();fgOsc=ctx.createOscillator();fgGain=ctx.createGain();fgOsc.type='sine';fgOsc.frequency.setValueAtTime(fgFreq,ctx.currentTime);fgGain.gain.setValueAtTime(0,ctx.currentTime);fgGain.gain.linearRampToValueAtTime(fgGetVol(),ctx.currentTime+0.02);fgOsc.connect(fgGain);fgGain.connect(ctx.destination);fgOsc.start();fgStartWave();}
+function fgKillOsc(){if(!fgOsc)return;var ctx=fgGetCtx();fgGain.gain.cancelScheduledValues(ctx.currentTime);fgGain.gain.setValueAtTime(fgGain.gain.value,ctx.currentTime);fgGain.gain.linearRampToValueAtTime(0,ctx.currentTime+0.04);var o=fgOsc;setTimeout(function(){try{o.stop()}catch(e){}},80);fgOsc=null;fgGain=null;fgStopWave();}
+function fgApplyFreq(f){f=Math.max(65,Math.min(1500,Math.round(f)));fgFreq=f;var sl=document.getElementById('fg-freqSlider');var nm=document.getElementById('fg-freqNum');if(sl)sl.value=f;if(nm)nm.value=f;var NOTES=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];var m=Math.round(12*Math.log2(f/440)+69);var note=NOTES[((m%12)+12)%12]+String(Math.floor(m/12)-1);var df=document.getElementById('fg-dispFreq');var dn=document.getElementById('fg-dispNote');if(df)df.textContent=f.toFixed(2);if(dn)dn.textContent=note;if(fgOsc)fgOsc.frequency.setValueAtTime(f,fgGetCtx().currentTime);}
+function fgSetStatus(txt,mode){var st=document.getElementById('fg-statusTxt');var dt=document.getElementById('fg-sdot');if(st)st.textContent=txt;if(dt)dt.className='fg-dot'+(mode?' '+mode:'');}
+function fgTogglePlay(){if(fgSweeping)fgStopSweep();if(fgPlaying){fgPlaying=false;fgKillOsc();var b=document.getElementById('fg-btnPlay');if(b)b.className='fg-btn';var t=document.getElementById('fg-playTxt');if(t)t.textContent='Tocar';fgSetStatus('parado','');}else{fgPlaying=true;fgEnsureOsc();var b=document.getElementById('fg-btnPlay');if(b)b.className='fg-btn on-play';var t=document.getElementById('fg-playTxt');if(t)t.textContent='Parar';fgSetStatus('tocando','play');}}
+function fgSetDir(d){fgSweepDir=d;var u=document.getElementById('fg-dirUp');var dn=document.getElementById('fg-dirDown');var db=document.getElementById('fg-dirBounce');if(u)u.className='fg-dir'+(d==='up'?' active':'');if(dn)dn.className='fg-dir'+(d==='down'?' active':'');if(db)db.className='fg-dir'+(d==='bounce'?' active':'');fgUpdateStepInfo();}
+function fgUpdateStepInfo(){var from=parseFloat(document.getElementById('fg-swFrom').value)||65;var to=parseFloat(document.getElementById('fg-swTo').value)||1500;var step=parseFloat(document.getElementById('fg-swStep').value)||5;var iv=parseFloat(document.getElementById('fg-swInterval').value)||1;var arrow=fgSweepDir==='up'?'â†‘':fgSweepDir==='down'?'â†“':'â†•';var si=document.getElementById('fg-stepInfo');if(si)si.textContent=from+' Hz â†’ '+to+' Hz '+arrow+', passo '+step+' Hz, a cada '+iv.toFixed(1)+' s';}
+function fgToggleSweep(){if(fgSweeping){fgStopSweep();}else{if(fgPlaying)fgTogglePlay();fgStartSweep();}}
+function fgStartSweep(){var from=Math.max(65,parseFloat(document.getElementById('fg-swFrom').value)||65);var to=Math.min(1500,parseFloat(document.getElementById('fg-swTo').value)||1500);fgSweeping=true;fgBounceDir=1;fgApplyFreq(fgSweepDir==='down'?to:from);fgEnsureOsc();var b=document.getElementById('fg-btnSweep');if(b)b.className='fg-btn on-sweep';var t=document.getElementById('fg-sweepTxt');if(t)t.textContent='Parar varredura';fgSetStatus('varrendo','sweep');fgUpdateSweepBar();fgScheduleStep();}
+function fgScheduleStep(){var iv=Math.max(0.1,parseFloat(document.getElementById('fg-swInterval').value)||1)*1000;fgSweepTimer=setTimeout(fgDoStep,iv);}
+function fgDoStep(){if(!fgSweeping)return;var from=Math.max(65,parseFloat(document.getElementById('fg-swFrom').value)||65);var to=Math.min(1500,parseFloat(document.getElementById('fg-swTo').value)||1500);var step=Math.max(1,parseFloat(document.getElementById('fg-swStep').value)||5);var next;if(fgSweepDir==='up'){next=fgFreq+step;if(next>to)next=from;}else if(fgSweepDir==='down'){next=fgFreq-step;if(next<from)next=to;}else{next=fgFreq+step*fgBounceDir;if(next>=to){next=to;fgBounceDir=-1;}else if(next<=from){next=from;fgBounceDir=1;}}fgApplyFreq(next);fgUpdateSweepBar();fgScheduleStep();}
+function fgUpdateSweepBar(){var from=Math.max(65,parseFloat(document.getElementById('fg-swFrom').value)||65);var to=Math.min(1500,parseFloat(document.getElementById('fg-swTo').value)||1500);var pct=(fgFreq-from)/(to-from)*100;var bar=document.getElementById('fg-sweepBar');if(bar)bar.style.width=Math.max(0,Math.min(100,pct)).toFixed(1)+'%';}
+function fgStopSweep(){fgSweeping=false;if(fgSweepTimer){clearTimeout(fgSweepTimer);fgSweepTimer=null;}fgKillOsc();var b=document.getElementById('fg-btnSweep');if(b)b.className='fg-btn';var t=document.getElementById('fg-sweepTxt');if(t)t.textContent='Iniciar varredura';var bar=document.getElementById('fg-sweepBar');if(bar)bar.style.width='0%';fgSetStatus('parado','');}
+function fgStartWave(){if(fgAnimRAF)cancelAnimationFrame(fgAnimRAF);fgAnimT=0;fgDrawWave();}
+function fgStopWave(){if(fgAnimRAF){cancelAnimationFrame(fgAnimRAF);fgAnimRAF=null;}var cv=document.getElementById('fg-wc');if(!cv)return;var ctx=cv.getContext('2d');cv.width=cv.offsetWidth*devicePixelRatio;cv.height=cv.offsetHeight*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);ctx.clearRect(0,0,cv.offsetWidth,cv.offsetHeight);ctx.strokeStyle='#d0ceca';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,cv.offsetHeight/2);ctx.lineTo(cv.offsetWidth,cv.offsetHeight/2);ctx.stroke();}
+function fgDrawWave(){var cv=document.getElementById('fg-wc');if(!cv)return;var ctx=cv.getContext('2d');cv.width=cv.offsetWidth*devicePixelRatio;cv.height=cv.offsetHeight*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);var W=cv.offsetWidth,H=cv.offsetHeight;var cycles=Math.max(3,Math.min(14,Math.round(fgFreq/90)));ctx.clearRect(0,0,W,H);ctx.strokeStyle='#2c6fbf';ctx.lineWidth=1.8;ctx.beginPath();for(var x=0;x<W;x++){var y=H/2-Math.sin((x/W)*cycles*2*Math.PI+fgAnimT)*(H*0.38);x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();fgAnimT+=0.015;fgAnimRAF=requestAnimationFrame(fgDrawWave);}
+function fgInit(){var bp=document.getElementById('fg-btnPlay');var bs=document.getElementById('fg-btnSweep');var fs=document.getElementById('fg-freqSlider');var fn=document.getElementById('fg-freqNum');var vs=document.getElementById('fg-volSlider');if(bp)bp.onclick=fgTogglePlay;if(bs)bs.onclick=fgToggleSweep;if(fs)fs.oninput=function(){fgApplyFreq(parseFloat(this.value));};if(fn)fn.onchange=function(){fgApplyFreq(parseFloat(this.value)||440);};if(vs)vs.oninput=function(){var v=document.getElementById('fg-volVal');if(v)v.textContent=Math.round(this.value)+'%';if(fgGain&&fgAudioCtx)fgGain.gain.setValueAtTime(fgGetVol(),fgAudioCtx.currentTime);};['fg-swFrom','fg-swTo','fg-swStep','fg-swInterval'].forEach(function(id){var el=document.getElementById(id);if(el)el.oninput=fgUpdateStepInfo;});fgApplyFreq(440);fgStopWave();fgUpdateStepInfo();}
 function setV(type,idx,field,val){S[type][idx][field]=val;render();}
 function addRow(type){if(type==='tampo')S.tampo.push({m1:'',m2:'',m5:'',peso:'',ffs:'',barra:''});else S.fundo.push({m1:'',m2:'',m5:'',peso:''});render();}
 function toggleL(list,item,checked){var arr=S[list],idx=arr.indexOf(item);if(checked&&idx<0)arr.push(item);if(!checked&&idx>=0)arr.splice(idx,1);agendarSalvar();}
@@ -675,36 +722,36 @@ function lerArquivo(input){
         vernizTipo:dados.vernizTipo||'',camadas:dados.camadas||0};
       carregarObra(id);
       salvarCloud();
-    }catch(err){alert('Arquivo inválido.');}
+    }catch(err){alert('Arquivo invÃ¡lido.');}
   };
   reader.readAsText(f);input.value='';
 }
 
 function exportarPDF(){
-  // Reutiliza o motor de impressão, mas com cabeçalho otimizado e instrução explícita "Salvar como PDF"
+  // Reutiliza o motor de impressÃ£o, mas com cabeÃ§alho otimizado e instruÃ§Ã£o explÃ­cita "Salvar como PDF"
   var w=window.open('','_blank');
   function tblH(type){
     var isTampo=type==='tampo',rows=S[type];
-    var h='<h3 style="margin:18px 0 8px;font-size:11px;color:#8a6a30;text-transform:uppercase;letter-spacing:.1em;border-bottom:2px solid #c9a227;padding-bottom:5px">'+(isTampo?'▲ Tampo':'▽ Fundo')+'</h3>';
+    var h='<h3 style="margin:18px 0 8px;font-size:11px;color:#8a6a30;text-transform:uppercase;letter-spacing:.1em;border-bottom:2px solid #c9a227;padding-bottom:5px">'+(isTampo?'â–² Tampo':'â–½ Fundo')+'</h3>';
     h+='<table style="width:100%;border-collapse:collapse;font-size:11.5px"><thead><tr style="background:#f0e8d0">';
-    h+='<th style="padding:6px 8px;border:1px solid #d8ccb0;text-align:left;color:#6a4e20;font-size:10px;text-transform:uppercase;letter-spacing:.07em">Medição</th>';
+    h+='<th style="padding:6px 8px;border:1px solid #d8ccb0;text-align:left;color:#6a4e20;font-size:10px;text-transform:uppercase;letter-spacing:.07em">MediÃ§Ã£o</th>';
     ['Modo 1 (Hz)','Modo 2 (Hz)','Modo 5 (Hz)','Peso (g)'].forEach(function(l){h+='<th style="padding:6px 8px;border:1px solid #d8ccb0;color:#6a4e20;font-size:10px;text-transform:uppercase;letter-spacing:.07em">'+l+'</th>';});
     if(isTampo)h+='<th style="padding:6px 8px;border:1px solid #d8ccb0;color:#6a4e20;font-size:10px">FFS</th><th style="padding:6px 8px;border:1px solid #d8ccb0;color:#6a4e20;font-size:10px">Barra harm.</th>';
     h+='</tr></thead><tbody>';
     rows.forEach(function(row,i){
-      h+='<tr><td style="padding:6px 8px;border:1px solid #e8e0cc;color:#4a3a22;font-weight:600">Medição '+(i+1)+'</td>';
-      ['m1','m2','m5','peso'].forEach(function(f){h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:600;color:#1a1208">'+(row[f]||'—')+'</td>';});
+      h+='<tr><td style="padding:6px 8px;border:1px solid #e8e0cc;color:#4a3a22;font-weight:600">MediÃ§Ã£o '+(i+1)+'</td>';
+      ['m1','m2','m5','peso'].forEach(function(f){h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:600;color:#1a1208">'+(row[f]||'â€”')+'</td>';});
       if(isTampo){
         var fCol=row.ffs==='sim'?'#1a5e2e':row.ffs==='nao'?'#7a1a1a':'#9a8060';
         var bCol=row.barra==='sim'?'#1a5e2e':row.barra==='nao'?'#7a1a1a':'#9a8060';
-        h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:700;color:'+fCol+'">'+(row.ffs||'—')+'</td>';
-        h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:700;color:'+bCol+'">'+(row.barra||'—')+'</td>';
+        h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:700;color:'+fCol+'">'+(row.ffs||'â€”')+'</td>';
+        h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:700;color:'+bCol+'">'+(row.barra||'â€”')+'</td>';
       }
       h+='</tr>';
       if(i>0){
         var p=rows[i-1];
-        h+='<tr style="background:#e8f0fa"><td style="padding:4px 8px;border:1px solid #ccdaf5;font-size:10px;color:#3a5fa8;font-weight:700">Δ '+(i)+'→'+(i+1)+'</td>';
-        ['m1','m2','m5','peso'].forEach(function(f){var d=dv(p[f],row[f]);var col=d==='—'?'#9a8060':parseFloat(d)>0?'#1a6e3a':parseFloat(d)<0?'#a02020':'#9a8060';h+='<td style="padding:4px 8px;border:1px solid #ccdaf5;text-align:center;font-weight:700;color:'+col+'">'+d+'</td>';});
+        h+='<tr style="background:#e8f0fa"><td style="padding:4px 8px;border:1px solid #ccdaf5;font-size:10px;color:#3a5fa8;font-weight:700">Î” '+(i)+'â†’'+(i+1)+'</td>';
+        ['m1','m2','m5','peso'].forEach(function(f){var d=dv(p[f],row[f]);var col=d==='â€”'?'#9a8060':parseFloat(d)>0?'#1a6e3a':parseFloat(d)<0?'#a02020':'#9a8060';h+='<td style="padding:4px 8px;border:1px solid #ccdaf5;text-align:center;font-weight:700;color:'+col+'">'+d+'</td>';});
         if(isTampo)h+='<td style="border:1px solid #ccdaf5"></td><td style="border:1px solid #ccdaf5"></td>';
         h+='</tr>';
       }
@@ -714,19 +761,19 @@ function exportarPDF(){
   var seqItems=[];
   S.interno.forEach(function(o){seqItems.push({label:o,tag:'Interno',color:'#1a5e2e',bg:'#eaf7ee',border:'#5ab870'});});
   S.externo.forEach(function(o){seqItems.push({label:o,tag:'Externo',color:'#1a3a7e',bg:'#eaeffa',border:'#6090d8'});});
-  if(S.vernizTipo){var vl=S.vernizTipo==='oleo'?'Verniz a óleo':'Verniz misto',suf=S.camadas>0?' — '+S.camadas+' demão'+(S.camadas!==1?'s':''):'';seqItems.push({label:vl+suf,tag:'Verniz',color:'#7a4a08',bg:'#fffaed',border:'#c9a227'});}
+  if(S.vernizTipo){var vl=S.vernizTipo==='oleo'?'Verniz a Ã³leo':'Verniz misto',suf=S.camadas>0?' â€” '+S.camadas+' demÃ£o'+(S.camadas!==1?'s':''):'';seqItems.push({label:vl+suf,tag:'Verniz',color:'#7a4a08',bg:'#fffaed',border:'#c9a227'});}
   var seqH='';
   if(seqItems.length>0){
-    seqH='<h3 style="margin:22px 0 10px;font-size:11px;color:#8a6a30;text-transform:uppercase;letter-spacing:.1em;border-bottom:2px solid #c9a227;padding-bottom:5px">◆ Sequência de acabamento</h3>';
+    seqH='<h3 style="margin:22px 0 10px;font-size:11px;color:#8a6a30;text-transform:uppercase;letter-spacing:.1em;border-bottom:2px solid #c9a227;padding-bottom:5px">â—† SequÃªncia de acabamento</h3>';
     seqItems.forEach(function(it,i){seqH+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #e8e0cc"><span style="width:23px;height:23px;border-radius:50%;background:#c9a227;color:#1a1208;font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">'+(i+1)+'</span><span style="flex:1;font-size:13px;font-weight:600;color:#2a1e0a">'+it.label+'</span><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:'+it.bg+';color:'+it.color+';border:1.5px solid '+it.border+'">'+it.tag+'</span></div>';});
   }
   var logoSvg='<svg width="48" height="48" viewBox="0 0 80 80"><g transform="translate(40,40) rotate(45)"><rect x="-26" y="-26" width="52" height="52" fill="none" stroke="#c9a227" stroke-width="2.5"/><rect x="-21" y="-21" width="42" height="42" fill="none" stroke="#c9a227" stroke-width="1"/><rect x="-18" y="-18" width="36" height="36" fill="none" stroke="#c9a227" stroke-width="1.5"/><rect x="-22" y="-4" width="8" height="8" fill="#c9a227"/><rect x="14" y="-4" width="8" height="8" fill="#c9a227"/><rect x="-4" y="-22" width="8" height="8" fill="#c9a227"/><rect x="-4" y="14" width="8" height="8" fill="#c9a227"/></g><text x="40" y="46" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#1a1208">A</text></svg>';
-  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Relatório PDF — Atelier Allegretto</title><style>body{font-family:Segoe UI,sans-serif;padding:28px;color:#1a1208;background:#fdfaf3}@media print{body{padding:14px}@page{margin:1.2cm}}.pdf-hint{background:#fffaed;border:1px solid #c9a227;color:#7a4a08;padding:8px 12px;border-radius:6px;font-size:11px;margin-bottom:14px;text-align:center;font-weight:600}</style></head><body>');
-  w.document.write('<div class="pdf-hint">📄 Na caixa de impressão, escolha <b>"Salvar como PDF"</b> como destino para gerar o arquivo.</div>');
-  w.document.write('<div style="display:flex;align-items:center;gap:16px;border-bottom:2px solid #c9a227;padding-bottom:14px;margin-bottom:16px;background:#1a1208;padding:16px;border-radius:8px">'+logoSvg+'<div><div style="font-size:20px;font-weight:300;letter-spacing:.14em;font-family:Georgia,serif;color:#fff">Atelier Allegretto</div><div style="font-size:10px;color:#c9a227;letter-spacing:.28em;text-transform:uppercase;margin-top:2px">Lutheria — Relatório de Medições</div></div></div>');
-  w.document.write('<div style="display:flex;gap:28px;margin-bottom:16px;font-size:12px;color:#6a4e20;flex-wrap:wrap"><span><b>Modelo:</b> '+(S.modelo||'—')+'</span><span><b>Data:</b> '+(S.data||'—')+'</span><span><b>Cliente:</b> '+(S.cliente||'—')+'</span></div>');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>RelatÃ³rio PDF â€” Atelier Allegretto</title><style>body{font-family:Segoe UI,sans-serif;padding:28px;color:#1a1208;background:#fdfaf3}@media print{body{padding:14px}@page{margin:1.2cm}}.pdf-hint{background:#fffaed;border:1px solid #c9a227;color:#7a4a08;padding:8px 12px;border-radius:6px;font-size:11px;margin-bottom:14px;text-align:center;font-weight:600}</style></head><body>');
+  w.document.write('<div class="pdf-hint">ðŸ“„ Na caixa de impressÃ£o, escolha <b>"Salvar como PDF"</b> como destino para gerar o arquivo.</div>');
+  w.document.write('<div style="display:flex;align-items:center;gap:16px;border-bottom:2px solid #c9a227;padding-bottom:14px;margin-bottom:16px;background:#1a1208;padding:16px;border-radius:8px">'+logoSvg+'<div><div style="font-size:20px;font-weight:300;letter-spacing:.14em;font-family:Georgia,serif;color:#fff">Atelier Allegretto</div><div style="font-size:10px;color:#c9a227;letter-spacing:.28em;text-transform:uppercase;margin-top:2px">Lutheria â€” RelatÃ³rio de MediÃ§Ãµes</div></div></div>');
+  w.document.write('<div style="display:flex;gap:28px;margin-bottom:16px;font-size:12px;color:#6a4e20;flex-wrap:wrap"><span><b>Modelo:</b> '+(S.modelo||'â€”')+'</span><span><b>Data:</b> '+(S.data||'â€”')+'</span><span><b>Cliente:</b> '+(S.cliente||'â€”')+'</span></div>');
   w.document.write(tblH('tampo')+tblH('fundo')+seqH);
-  w.document.write('<div style="margin-top:24px;padding-top:12px;border-top:1px solid #d8ccb0;font-size:10px;color:#9a8060;text-align:center;letter-spacing:.1em">— Atelier Allegretto Lutheria —</div>');
+  w.document.write('<div style="margin-top:24px;padding-top:12px;border-top:1px solid #d8ccb0;font-size:10px;color:#9a8060;text-align:center;letter-spacing:.1em">â€” Atelier Allegretto Lutheria â€”</div>');
   w.document.write('</body></html>');
   w.document.close();w.focus();setTimeout(function(){w.print();},500);
 }
@@ -735,26 +782,26 @@ function imprimir(){
   var w=window.open('','_blank');
   function tblH(type){
     var isTampo=type==='tampo',rows=S[type];
-    var h='<h3 style="margin:18px 0 8px;font-size:11px;color:#8a6a30;text-transform:uppercase;letter-spacing:.1em;border-bottom:2px solid #c9a227;padding-bottom:5px">'+(isTampo?'▲ Tampo':'▽ Fundo')+'</h3>';
+    var h='<h3 style="margin:18px 0 8px;font-size:11px;color:#8a6a30;text-transform:uppercase;letter-spacing:.1em;border-bottom:2px solid #c9a227;padding-bottom:5px">'+(isTampo?'â–² Tampo':'â–½ Fundo')+'</h3>';
     h+='<table style="width:100%;border-collapse:collapse;font-size:11.5px"><thead><tr style="background:#f0e8d0">';
-    h+='<th style="padding:6px 8px;border:1px solid #d8ccb0;text-align:left;color:#6a4e20;font-size:10px;text-transform:uppercase;letter-spacing:.07em">Medição</th>';
+    h+='<th style="padding:6px 8px;border:1px solid #d8ccb0;text-align:left;color:#6a4e20;font-size:10px;text-transform:uppercase;letter-spacing:.07em">MediÃ§Ã£o</th>';
     ['Modo 1 (Hz)','Modo 2 (Hz)','Modo 5 (Hz)','Peso (g)'].forEach(function(l){h+='<th style="padding:6px 8px;border:1px solid #d8ccb0;color:#6a4e20;font-size:10px;text-transform:uppercase;letter-spacing:.07em">'+l+'</th>';});
     if(isTampo)h+='<th style="padding:6px 8px;border:1px solid #d8ccb0;color:#6a4e20;font-size:10px">FFS</th><th style="padding:6px 8px;border:1px solid #d8ccb0;color:#6a4e20;font-size:10px">Barra harm.</th>';
     h+='</tr></thead><tbody>';
     rows.forEach(function(row,i){
-      h+='<tr><td style="padding:6px 8px;border:1px solid #e8e0cc;color:#4a3a22;font-weight:600">Medição '+(i+1)+'</td>';
-      ['m1','m2','m5','peso'].forEach(function(f){h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:600;color:#1a1208">'+(row[f]||'—')+'</td>';});
+      h+='<tr><td style="padding:6px 8px;border:1px solid #e8e0cc;color:#4a3a22;font-weight:600">MediÃ§Ã£o '+(i+1)+'</td>';
+      ['m1','m2','m5','peso'].forEach(function(f){h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:600;color:#1a1208">'+(row[f]||'â€”')+'</td>';});
       if(isTampo){
         var fCol=row.ffs==='sim'?'#1a5e2e':row.ffs==='nao'?'#7a1a1a':'#9a8060';
         var bCol=row.barra==='sim'?'#1a5e2e':row.barra==='nao'?'#7a1a1a':'#9a8060';
-        h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:700;color:'+fCol+'">'+(row.ffs||'—')+'</td>';
-        h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:700;color:'+bCol+'">'+(row.barra||'—')+'</td>';
+        h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:700;color:'+fCol+'">'+(row.ffs||'â€”')+'</td>';
+        h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:700;color:'+bCol+'">'+(row.barra||'â€”')+'</td>';
       }
       h+='</tr>';
       if(i>0){
         var p=rows[i-1];
-        h+='<tr style="background:#e8f0fa"><td style="padding:4px 8px;border:1px solid #ccdaf5;font-size:10px;color:#3a5fa8;font-weight:700">Δ '+(i)+'→'+(i+1)+'</td>';
-        ['m1','m2','m5','peso'].forEach(function(f){var d=dv(p[f],row[f]);var col=d==='—'?'#9a8060':parseFloat(d)>0?'#1a6e3a':parseFloat(d)<0?'#a02020':'#9a8060';h+='<td style="padding:4px 8px;border:1px solid #ccdaf5;text-align:center;font-weight:700;color:'+col+'">'+d+'</td>';});
+        h+='<tr style="background:#e8f0fa"><td style="padding:4px 8px;border:1px solid #ccdaf5;font-size:10px;color:#3a5fa8;font-weight:700">Î” '+(i)+'â†’'+(i+1)+'</td>';
+        ['m1','m2','m5','peso'].forEach(function(f){var d=dv(p[f],row[f]);var col=d==='â€”'?'#9a8060':parseFloat(d)>0?'#1a6e3a':parseFloat(d)<0?'#a02020':'#9a8060';h+='<td style="padding:4px 8px;border:1px solid #ccdaf5;text-align:center;font-weight:700;color:'+col+'">'+d+'</td>';});
         if(isTampo)h+='<td style="border:1px solid #ccdaf5"></td><td style="border:1px solid #ccdaf5"></td>';
         h+='</tr>';
       }
@@ -764,16 +811,16 @@ function imprimir(){
   var seqItems=[];
   S.interno.forEach(function(o){seqItems.push({label:o,tag:'Interno',color:'#1a5e2e',bg:'#eaf7ee',border:'#5ab870'});});
   S.externo.forEach(function(o){seqItems.push({label:o,tag:'Externo',color:'#1a3a7e',bg:'#eaeffa',border:'#6090d8'});});
-  if(S.vernizTipo){var vl=S.vernizTipo==='oleo'?'Verniz a óleo':'Verniz misto',suf=S.camadas>0?' — '+S.camadas+' demão'+(S.camadas!==1?'s':''):'';seqItems.push({label:vl+suf,tag:'Verniz',color:'#7a4a08',bg:'#fffaed',border:'#c9a227'});}
+  if(S.vernizTipo){var vl=S.vernizTipo==='oleo'?'Verniz a Ã³leo':'Verniz misto',suf=S.camadas>0?' â€” '+S.camadas+' demÃ£o'+(S.camadas!==1?'s':''):'';seqItems.push({label:vl+suf,tag:'Verniz',color:'#7a4a08',bg:'#fffaed',border:'#c9a227'});}
   var seqH='';
   if(seqItems.length>0){
-    seqH='<h3 style="margin:22px 0 10px;font-size:11px;color:#8a6a30;text-transform:uppercase;letter-spacing:.1em;border-bottom:2px solid #c9a227;padding-bottom:5px">◆ Sequência de acabamento</h3>';
+    seqH='<h3 style="margin:22px 0 10px;font-size:11px;color:#8a6a30;text-transform:uppercase;letter-spacing:.1em;border-bottom:2px solid #c9a227;padding-bottom:5px">â—† SequÃªncia de acabamento</h3>';
     seqItems.forEach(function(it,i){seqH+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #e8e0cc"><span style="width:23px;height:23px;border-radius:50%;background:#c9a227;color:#1a1208;font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">'+(i+1)+'</span><span style="flex:1;font-size:13px;font-weight:600;color:#2a1e0a">'+it.label+'</span><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:'+it.bg+';color:'+it.color+';border:1.5px solid '+it.border+'">'+it.tag+'</span></div>';});
   }
   var logoSvg='<svg width="52" height="52" viewBox="0 0 80 80"><g transform="translate(40,40) rotate(45)"><rect x="-26" y="-26" width="52" height="52" fill="none" stroke="#c9a227" stroke-width="2.5"/><rect x="-21" y="-21" width="42" height="42" fill="none" stroke="#c9a227" stroke-width="1"/><rect x="-18" y="-18" width="36" height="36" fill="none" stroke="#c9a227" stroke-width="1.5"/><rect x="-22" y="-4" width="8" height="8" fill="#c9a227"/><rect x="14" y="-4" width="8" height="8" fill="#c9a227"/><rect x="-4" y="-22" width="8" height="8" fill="#c9a227"/><rect x="-4" y="14" width="8" height="8" fill="#c9a227"/></g><text x="40" y="46" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#1a1208">A</text></svg>';
-  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Medições — Atelier Allegretto</title><style>body{font-family:Segoe UI,sans-serif;padding:28px;color:#1a1208;background:#fdfaf3}@media print{body{padding:16px}}</style></head><body>');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>MediÃ§Ãµes â€” Atelier Allegretto</title><style>body{font-family:Segoe UI,sans-serif;padding:28px;color:#1a1208;background:#fdfaf3}@media print{body{padding:16px}}</style></head><body>');
   w.document.write('<div style="display:flex;align-items:center;gap:16px;border-bottom:2px solid #c9a227;padding-bottom:14px;margin-bottom:16px;background:#1a1208;padding:16px;border-radius:8px">'+logoSvg+'<div><div style="font-size:20px;font-weight:300;letter-spacing:.14em;font-family:Georgia,serif;color:#fff">Atelier Allegretto</div><div style="font-size:10px;color:#c9a227;letter-spacing:.28em;text-transform:uppercase;margin-top:2px">Lutheria</div></div></div>');
-  w.document.write('<div style="display:flex;gap:28px;margin-bottom:16px;font-size:12px;color:#6a4e20"><span><b>Modelo:</b> '+(S.modelo||'—')+'</span><span><b>Data:</b> '+(S.data||'—')+'</span><span><b>Cliente:</b> '+(S.cliente||'—')+'</span></div>');
+  w.document.write('<div style="display:flex;gap:28px;margin-bottom:16px;font-size:12px;color:#6a4e20"><span><b>Modelo:</b> '+(S.modelo||'â€”')+'</span><span><b>Data:</b> '+(S.data||'â€”')+'</span><span><b>Cliente:</b> '+(S.cliente||'â€”')+'</span></div>');
   w.document.write(tblH('tampo')+tblH('fundo')+seqH);
   w.document.write('</body></html>');
   w.document.close();w.focus();setTimeout(function(){w.print();},400);
@@ -781,7 +828,7 @@ function imprimir(){
 
 var local=localStorage.getItem('allegretto_obras');
 if(!local){
-  obrasData['padrao']={nome:'Obra padrão'};
+  obrasData['padrao']={nome:'Obra padrÃ£o'};
   obraAtiva='padrao';
   carregarObra('padrao');
 }
