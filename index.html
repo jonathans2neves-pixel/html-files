@@ -1,0 +1,791 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2,user-scalable=yes">
+<meta name="theme-color" content="#8a8a8a">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Atelier Allegretto — Medições Vibracionais</title>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f2ead8;color:#1a1208;font-size:14px}
+
+.top-header{background:#8a8a8a;padding:18px 24px 14px;display:flex;align-items:center;gap:18px;border-bottom:3px solid #c9a227}
+.brand-name{font-size:21px;font-weight:300;color:#fff;letter-spacing:.14em;font-family:Georgia,serif}
+.brand-sub{font-size:11px;color:#c9a227;letter-spacing:.28em;text-transform:uppercase;margin-top:2px}
+.app-title-txt{font-size:11px;color:rgba(255,255,255,.75);margin-top:5px;letter-spacing:.04em}
+.header-actions{display:flex;gap:8px;flex-shrink:0;margin-left:auto}
+.btn-action{padding:7px 13px;border:1px solid rgba(255,255,255,.4);border-radius:7px;background:rgba(255,255,255,.08);color:#fff;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s}
+.btn-action:hover{border-color:#fff;background:rgba(255,255,255,.18)}
+.btn-action svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.btn-print{background:#c9a227;color:#1a1208;border-color:#c9a227;font-weight:700}
+.btn-print:hover{background:#e0b830;border-color:#e0b830}
+
+.body-area{padding:20px 24px}
+
+.meta-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px}
+.field label{font-size:10px;font-weight:700;color:#8a6a30;text-transform:uppercase;letter-spacing:.12em;display:block;margin-bottom:5px}
+.field input{width:100%;padding:9px 12px;border:1.5px solid #d8ccb0;border-radius:8px;font-size:13px;font-weight:500;color:#1a1208;background:#faf6ec;transition:border .15s}
+.field input:focus{outline:none;border-color:#c9a227;background:#fff}
+.field input::placeholder{color:#b0a080;font-weight:400}
+
+.tabs-bar{display:flex;gap:0;border-bottom:2px solid #d8ccb0;margin-bottom:0;position:relative;z-index:2}
+.tab-btn{padding:9px 22px;border:none;border-bottom:3px solid transparent;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#6a4e20;transition:all .15s;letter-spacing:.04em;margin-bottom:-2px;display:inline-flex;align-items:center;gap:5px}
+.tab-btn.active{color:#1a1208;border-bottom-color:#c9a227}
+.tab-btn:hover:not(.active){color:#1a1208}
+
+.panel{background:#fdfaf3;border:1.5px solid #d8ccb0;border-radius:10px;padding:18px;margin-top:14px;position:relative;overflow:hidden}
+.panel-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.05;pointer-events:none;z-index:0;width:200px}
+.panel-content{position:relative;z-index:1}
+
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px}
+thead th{background:#f0e8d0;color:#6a4e20;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.09em;padding:9px 8px;text-align:center;border-bottom:2px solid #c9a227}
+thead th:first-child{text-align:left;padding-left:12px}
+tbody tr.data-row:hover{background:#f5edd8}
+tbody td{padding:8px 6px;border-bottom:1px solid #e8e0cc;text-align:center;vertical-align:middle;color:#2a1e0a;font-weight:500}
+tbody td:first-child{text-align:left;padding-left:12px;font-weight:600;color:#6a4e20;font-size:12px;white-space:nowrap}
+.num-in{width:70px;padding:5px 6px;border:1.5px solid #d0c4a0;border-radius:6px;font-size:13px;font-weight:600;text-align:center;color:#1a1208;background:#faf6ec;transition:border .15s}
+.num-in:focus{outline:none;border-color:#c9a227;background:#fff}
+.sel-in{padding:5px 4px;border:1.5px solid #d0c4a0;border-radius:6px;font-size:12px;font-weight:600;color:#1a1208;background:#faf6ec;width:72px;cursor:pointer}
+.sel-in:focus{outline:none;border-color:#c9a227}
+.sel-sim{border-color:#2a6e3a;background:#eaf7ee;color:#1a5e2e}
+.sel-nao{border-color:#a03030;background:#fceaea;color:#7a1a1a}
+tr.diff-row td{background:#e8f0fa;border-bottom:1px solid #ccdaf5;padding:5px 6px;text-align:center;font-size:12px;font-weight:700;color:#2a4a8a}
+tr.diff-row td:first-child{text-align:left;padding-left:12px;font-size:11px;color:#3a5fa8;font-weight:700}
+.diff-pos{color:#1a6e3a}.diff-neg{color:#a02020}.diff-zero{color:#9a8060}
+.btn-add{margin-top:13px;padding:8px 16px;border:1.5px dashed #c0b090;border-radius:8px;background:transparent;color:#9a7840;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
+.btn-add:hover{border-color:#c9a227;color:#1a1208;background:#f5edd8}
+.row-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#e8d8b0;color:#6a4e20;font-size:10px;font-weight:800;margin-right:5px}
+
+.sec-title{font-size:10px;font-weight:800;color:#8a6a30;text-transform:uppercase;letter-spacing:.12em;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+.sec-title:first-child{margin-top:0}
+.sec-title::after{content:'';flex:1;height:1.5px;background:#d8ccb0}
+.chk-grid{display:flex;flex-wrap:wrap;gap:6px 10px;margin-bottom:4px}
+.chk-label{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:500;color:#4a3a22;cursor:pointer;padding:6px 11px;border-radius:7px;border:1.5px solid #d8ccb0;transition:all .12s;background:#faf6ec;user-select:none}
+.chk-label:hover{border-color:#c9a227;background:#f5edd8;color:#1a1208}
+.chk-label.checked{background:#fffaed;border-color:#c9a227;color:#6a3e08;font-weight:700}
+.chk-label input{accent-color:#c9a227;width:14px;height:14px;cursor:pointer;flex-shrink:0}
+.verniz-tipos{display:flex;gap:10px;margin-bottom:14px}
+.vtype-card{flex:1;padding:11px 14px;border:1.5px solid #d8ccb0;border-radius:9px;cursor:pointer;transition:all .15s;background:#faf6ec;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:#6a5030}
+.vtype-card.selected{border-color:#c9a227;background:#fffaed;color:#5a3a08;font-weight:700}
+.vtype-card input{accent-color:#c9a227;width:14px;height:14px}
+.camadas-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.camadas-row label{font-size:13px;font-weight:600;color:#4a3a22}
+.camadas-row input[type=number]{width:72px;padding:7px 10px;border:1.5px solid #d0c4a0;border-radius:8px;font-size:14px;font-weight:700;text-align:center;color:#1a1208;background:#faf6ec}
+.camadas-row input[type=number]:focus{outline:none;border-color:#c9a227}
+.badge-demao{padding:4px 13px;border-radius:20px;background:#fffaed;border:1.5px solid #c9a227;color:#7a4a08;font-size:12px;font-weight:700}
+
+.resumo-box{margin-top:20px;background:#fff;border:1.5px solid #c9a227;border-radius:10px;overflow:hidden}
+.resumo-header{background:#1a1208;color:#c9a227;padding:11px 16px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.resumo-header svg{width:13px;height:13px;stroke:#c9a227;fill:none;stroke-width:2.5}
+.resumo-body{padding:14px 16px;background:#fdfaf3}
+.resumo-empty{color:#b0a080;font-size:13px;font-style:italic;font-weight:500}
+.seq-list{list-style:none;display:flex;flex-direction:column;gap:0}
+.seq-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #e8e0cc;font-size:13px;font-weight:600;color:#2a1e0a}
+.seq-item:last-child{border-bottom:none}
+.seq-num{width:25px;height:25px;border-radius:50%;background:#c9a227;color:#1a1208;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.seq-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 9px;border-radius:20px;margin-left:auto;white-space:nowrap}
+.tag-int{background:#eaf7ee;color:#1a5e2e;border:1.5px solid #5ab870}
+.tag-ext{background:#eaeffa;color:#1a3a7e;border:1.5px solid #6090d8}
+.tag-verniz{background:#fffaed;color:#7a4a08;border:1.5px solid #c9a227}
+
+.resumo-tampo{margin-top:18px;background:#fff;border:1.5px solid #d8ccb0;border-radius:10px;overflow:hidden}
+.resumo-tampo-header{background:linear-gradient(135deg,#1a1208,#3a2a18);color:#c9a227;padding:11px 16px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.resumo-tampo-header svg{width:14px;height:14px;stroke:#c9a227;fill:none;stroke-width:2.5}
+.resumo-tampo-body{padding:14px 16px;background:#fdfaf3;display:flex;flex-direction:column;gap:10px}
+.resumo-card{background:#fff;border:1.5px solid #e8e0cc;border-radius:8px;padding:11px 14px}
+.resumo-card-title{font-size:11px;font-weight:800;color:#8a6a30;text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px;padding-bottom:6px;border-bottom:1.5px dashed #d8ccb0;display:flex;align-items:center;gap:7px}
+.resumo-card-title::before{content:'';width:5px;height:5px;border-radius:50%;background:#c9a227}
+.resumo-grid{display:flex;flex-direction:column;gap:5px}
+.resumo-row{display:flex;align-items:center;gap:10px;font-size:12.5px;padding:5px 9px;border-radius:6px;background:#faf6ec}
+.resumo-row.diff-pos{background:#e8f5ec;color:#1a5e2e;border-left:3px solid #5ab870}
+.resumo-row.diff-neg{background:#fbeaea;color:#7a1a1a;border-left:3px solid #d86060}
+.resumo-row.diff-zero{background:#f5edd8;color:#7a6a30;border-left:3px solid #c9a227}
+.resumo-row.diff-active{background:#e8f5ec;color:#1a5e2e;border-left:3px solid #5ab870}
+.resumo-row.diff-inactive{background:#fbeaea;color:#7a1a1a;border-left:3px solid #d86060}
+.resumo-label{font-weight:800;min-width:90px;color:#6a4e20;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+.resumo-row.diff-pos .resumo-label,.resumo-row.diff-neg .resumo-label,.resumo-row.diff-zero .resumo-label,.resumo-row.diff-active .resumo-label,.resumo-row.diff-inactive .resumo-label{color:inherit}
+.resumo-value{flex:1;color:#2a1e0a;font-weight:600}
+.resumo-row.diff-pos .resumo-value,.resumo-row.diff-neg .resumo-value,.resumo-row.diff-zero .resumo-value,.resumo-row.diff-active .resumo-value,.resumo-row.diff-inactive .resumo-value{color:inherit}
+.resumo-delta{font-weight:800;font-size:12px;white-space:nowrap;padding:2px 8px;border-radius:12px;background:rgba(255,255,255,.55)}
+.resumo-empty-tampo{color:#9a8060;font-size:13px;font-style:italic;font-weight:500;text-align:center;padding:14px 8px;background:#faf6ec;border:1.5px dashed #d8ccb0;border-radius:8px}
+
+/* === MOBILE: TABELA EM CARDS === */
+.mob-list{display:flex;flex-direction:column;gap:11px}
+.mob-card{background:#fff;border:1.5px solid #e0d6bc;border-radius:10px;padding:12px 13px;box-shadow:0 1px 0 rgba(122,90,30,.04)}
+.mob-card-title{font-size:11.5px;font-weight:800;color:#6a4e20;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;padding-bottom:7px;border-bottom:1.5px dashed #d8ccb0;display:flex;align-items:center}
+.mob-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mob-field{display:flex;flex-direction:column;gap:4px}
+.mob-field label{font-size:10px;font-weight:800;color:#8a6a30;text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:baseline;gap:4px}
+.mob-unit{font-weight:500;text-transform:none;letter-spacing:0;color:#b0a080;font-size:9.5px}
+.mob-field .num-in,.mob-field .sel-in{width:100%;padding:9px 8px;font-size:15px;font-weight:700;text-align:center;border-radius:7px}
+.mob-field .sel-in{padding:9px 6px;font-size:13px}
+.mob-diff{background:#eef4fc;border:1.5px solid #c8d8ee;border-radius:9px;padding:9px 12px;margin-top:6px}
+.mob-diff-title{font-size:10px;font-weight:800;color:#3a5fa8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.mob-diff-title::before{content:'';width:5px;height:5px;border-radius:50%;background:#6090d8}
+.mob-diff-grid{display:flex;flex-direction:column;gap:3px}
+.mob-diff-row{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;padding:4px 7px;border-radius:5px;background:rgba(255,255,255,.65);gap:8px}
+.mob-diff-row.diff-pos{background:#e0f0e4;color:#1a5e2e;font-weight:700}
+.mob-diff-row.diff-neg{background:#f8e0e0;color:#7a1a1a;font-weight:700}
+.mob-diff-row.diff-zero{background:#efe5d0;color:#8a6a30}
+.mob-diff-label{font-weight:700;font-size:11px}
+.mob-diff-value{font-weight:600;font-family:Georgia,serif;font-size:12px}
+
+/* === RESPONSIVO: TABLET / CELULAR === */
+@media (max-width:900px){
+  body{font-size:13px}
+  .top-header{padding:13px 14px;gap:12px;flex-wrap:wrap}
+  .brand-name{font-size:18px;letter-spacing:.12em}
+  .brand-sub{font-size:10px;letter-spacing:.22em}
+  .app-title-txt{font-size:10px}
+  .header-actions{margin-left:0;width:100%;justify-content:stretch;gap:6px;flex-wrap:wrap}
+  .btn-action{padding:8px 10px;font-size:11.5px;flex:1;justify-content:center;min-width:0}
+  .btn-action svg{width:12px;height:12px;flex-shrink:0}
+  .btn-print{flex:1.2}
+  .body-area{padding:14px 12px}
+  .meta-grid{grid-template-columns:1fr;gap:10px;margin-bottom:14px}
+  .field input{padding:10px 12px;font-size:14px}
+  .tabs-bar{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;scrollbar-width:none;background:#faf6ec;border-radius:8px 8px 0 0;border:1px solid #d8ccb0;border-bottom:2px solid #c9a227;padding:4px 4px 0;gap:4px}
+  .tabs-bar::-webkit-scrollbar{display:none}
+  .tab-btn{padding:10px 14px;font-size:13px;white-space:nowrap;flex-shrink:0;border-radius:6px 6px 0 0;color:#5a3e10;background:transparent;min-height:40px}
+  .tab-btn.active{color:#1a1208;background:#fdfaf3;box-shadow:0 -2px 0 #c9a227 inset}
+  .panel{padding:14px 12px;margin-top:12px;border-radius:9px}
+  .panel-watermark{width:140px;opacity:.04}
+  .sec-title{font-size:10px;margin:14px 0 8px}
+  .chk-grid{gap:5px 7px}
+  .chk-label{font-size:11.5px;padding:6px 10px}
+  .verniz-tipos{flex-direction:column;gap:8px}
+  .vtype-card{padding:10px 12px;font-size:12.5px}
+  .camadas-row{gap:10px;flex-wrap:wrap}
+  .camadas-row label{font-size:12px}
+  .camadas-row input[type=number]{width:84px;padding:10px;font-size:16px}
+  .btn-add{width:100%;justify-content:center;padding:11px;font-size:12.5px}
+  .row-num{width:18px;height:18px;font-size:9px;margin-right:4px}
+  .resumo-tampo{margin-top:16px}
+  .resumo-tampo-body{padding:12px;gap:8px}
+  .resumo-card{padding:10px 12px}
+  .resumo-card-title{font-size:10.5px}
+  .resumo-row{flex-wrap:wrap;gap:5px 8px;padding:6px 9px;font-size:12px}
+  .resumo-label{min-width:80px;font-size:10.5px}
+  .resumo-value{font-size:12px;flex:1 1 auto;min-width:0}
+  .resumo-delta{font-size:11px;padding:2px 7px}
+  .resumo-empty-tampo{font-size:12px;padding:12px 8px}
+  .resumo-box{margin-top:14px}
+  .resumo-header{padding:9px 14px;font-size:10px}
+  .resumo-body{padding:12px 14px}
+  .seq-item{padding:8px 0;font-size:12.5px;flex-wrap:wrap;gap:6px}
+  .seq-tag{margin-left:0;font-size:9.5px;padding:2px 8px}
+}
+@media (max-width:768px){
+  .tbl-wrap{margin:0 -4px;padding:0 4px;-webkit-overflow-scrolling:touch}
+  table{font-size:11.5px;min-width:520px}
+  thead th{padding:7px 5px;font-size:9px;letter-spacing:.06em}
+  thead th:first-child{padding-left:8px}
+  tbody td{padding:7px 4px}
+  tbody td:first-child{padding-left:8px;font-size:11px;white-space:nowrap}
+  tr.diff-row td{padding:5px 4px;font-size:10.5px}
+  tr.diff-row td:first-child{padding-left:8px;font-size:10px}
+  .num-in{width:62px;padding:5px 4px;font-size:12px}
+  .sel-in{width:64px;font-size:11px;padding:4px 2px}
+}
+@media (max-width:420px){
+  .top-header{padding:11px 10px}
+  .brand-name{font-size:15px}
+  .brand-sub{font-size:9px}
+  .app-title-txt{font-size:9px}
+  .btn-action{padding:7px 8px;font-size:10.5px;gap:4px}
+  .btn-action svg{width:11px;height:11px}
+  .panel{padding:12px 10px}
+  .body-area{padding:12px 10px}
+  .num-in{width:56px;padding:4px 3px;font-size:11.5px}
+  .sel-in{width:60px;font-size:10.5px}
+  .chk-label{font-size:11px;padding:5px 9px}
+  .resumo-card-title{font-size:10px}
+  .resumo-row{font-size:11.5px}
+  .resumo-label{font-size:10px;min-width:70px}
+}
+@media (hover:none) and (pointer:coarse){
+  .btn-action,.chk-label,.vtype-card,.tab-btn{min-height:40px}
+  .num-in,.sel-in{min-height:36px}
+}
+@media print{
+  .panel-watermark{display:none}
+  .panel{border:none}
+}
+
+/* Obra bar & cloud sync */
+.obra-bar{display:flex;align-items:center;gap:10px;padding:10px 0;flex-wrap:wrap}
+.obra-select{padding:7px 10px;border:1.5px solid #d0c4a0;border-radius:8px;font-size:13px;font-weight:600;color:#1a1208;background:#faf6ec;cursor:pointer;min-width:180px}
+.obra-select:focus{outline:none;border-color:#c9a227}
+.obra-btn{padding:6px 12px;border:1.5px solid #d0c4a0;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;background:#faf6ec;color:#6a4e20;transition:all .15s}
+.obra-btn:hover{border-color:#c9a227;background:#f5edd8}
+.sync-status{font-size:11px;font-weight:600;display:flex;align-items:center;gap:5px;margin-left:auto;padding:4px 10px;border-radius:6px;white-space:nowrap}
+.sync-idle{color:#9a8060}
+.sync-saving{color:#c9a227;background:#fff8e0}
+.sync-saved{color:#1a6e3a;background:#eaf7ee}
+.sync-error{color:#a02020;background:#fceaea}
+@media(max-width:900px){
+  .obra-bar{gap:8px}
+  .obra-select{min-width:140px;font-size:12px;padding:8px}
+  .obra-btn{font-size:11px;padding:6px 10px}
+}
+</style>
+
+<div class="app">
+  <div class="top-header">
+    <div style="flex-shrink:0">
+      <svg width="50" height="50" viewBox="0 0 80 80">
+        <g transform="translate(40,40) rotate(45)">
+          <rect x="-26" y="-26" width="52" height="52" fill="none" stroke="#c9a227" stroke-width="2.5"/>
+          <rect x="-21" y="-21" width="42" height="42" fill="none" stroke="#c9a227" stroke-width="1"/>
+          <rect x="-18" y="-18" width="36" height="36" fill="none" stroke="#c9a227" stroke-width="1.5"/>
+          <rect x="-22" y="-4" width="8" height="8" fill="#c9a227"/>
+          <rect x="14" y="-4" width="8" height="8" fill="#c9a227"/>
+          <rect x="-4" y="-22" width="8" height="8" fill="#c9a227"/>
+          <rect x="-4" y="14" width="8" height="8" fill="#c9a227"/>
+        </g>
+        <text x="40" y="46" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#ffffff">A</text>
+      </svg>
+    </div>
+    <div style="flex:1">
+      <div class="brand-name">Atelier Allegretto</div>
+      <div class="brand-sub">Lutheria</div>
+      <div class="app-title-txt">Medições vibracionais — análise acústica</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-action" onclick="salvarJSON()">
+        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Salvar
+      </button>
+      <button class="btn-action" onclick="carregarJSON()" title="Abrir projeto salvo para continuar">
+        <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>Abrir
+      </button>
+      <button class="btn-action" onclick="exportarPDF()" title="Exportar relatório em PDF" style="border-color:#7a4a20;color:#e0b830">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><text x="12" y="17" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="6" font-weight="800" fill="currentColor" stroke="none">PDF</text></svg>PDF
+      </button>
+      <button class="btn-action btn-print" onclick="imprimir()">
+        <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimir
+      </button>
+    </div>
+  </div>
+
+  <div class="body-area">
+    <div class="meta-grid">
+      <div class="field"><label>Modelo</label><input type="text" id="f-modelo" placeholder="Ex: Violino 4/4 — Spruce/Maple" oninput="S.modelo=this.value;agendarSalvar()"></div>
+      <div class="field"><label>Data</label><input type="date" id="f-data" oninput="S.data=this.value;agendarSalvar()"></div>
+      <div class="field"><label>Cliente</label><input type="text" id="f-cliente" placeholder="Nome do cliente" oninput="S.cliente=this.value;agendarSalvar()"></div>
+    </div>
+
+    <div class="obra-bar">
+      <select class="obra-select" id="obra-select" onchange="switchObra(this.value)"></select>
+      <button class="obra-btn" onclick="novaObra()">+ Nova</button>
+      <button class="obra-btn" onclick="renomearObra()">✎ Renomear</button>
+      <button class="obra-btn" onclick="excluirObra()">✕ Excluir</button>
+      <span class="sync-status sync-idle" id="sync-status">○ Iniciando...</span>
+    </div>
+
+    <div class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab('tampo',this)">▲ Tampo</button>
+      <button class="tab-btn" onclick="switchTab('fundo',this)">▽ Fundo</button>
+      <button class="tab-btn" onclick="switchTab('acabamento',this)">◆ Acabamento</button>
+    </div>
+    <div id="main-panel"></div>
+  </div>
+  <input type="file" id="file-input" accept=".json" style="display:none" onchange="lerArquivo(this)">
+</div>
+
+<script>
+var S={modelo:'',data:new Date().toISOString().slice(0,10),cliente:'',activeTab:'tampo',
+  tampo:[{m1:'',m2:'',m5:'',peso:'',ffs:'',barra:''},{m1:'',m2:'',m5:'',peso:'',ffs:'',barra:''}],
+  fundo:[{m1:'',m2:'',m5:'',peso:''},{m1:'',m2:'',m5:'',peso:''}],
+  interno:[],externo:[],vernizTipo:'',camadas:0};
+
+var INTERNO=['Água de cola','Caseína','Breu queimado','Chá de cavalinha','Pó de pedra-pomes','Albumina','Aloe + goma-laca','Mastique + pedra-pomes','Caseína + pedra-pomes'];
+var EXTERNO=['Água de cola','Caseína','Caseína + cálcio','Caseína + pedra-pomes','Breu queimado','Chá de cavalinha','Pó de pedra-pomes','Albumina','Aloe + goma-laca'];
+
+// === CLOUD SYNC (Firebase Firestore) ===
+firebase.initializeApp({
+  apiKey: "AIzaSyA2vaEciu3R6OJyZD0_USImrJqd4NSxVCI",
+  authDomain: "atelierallegretto-f237f.firebaseapp.com",
+  projectId: "atelierallegretto-f237f",
+  storageBucket: "atelierallegretto-f237f.firebasestorage.app",
+  messagingSenderId: "249550314854",
+  appId: "1:249550314854:web:b9a40875d1da67c7a27ca7",
+  measurementId: "G-D0M4RX3YWE"
+});
+var db=firebase.firestore();
+var DOC_REF=db.collection('allegretto').doc('estado');
+
+// === MULTI-OBRA (projects) ===
+var obrasData={};
+var obraAtiva='';
+
+function syncSparaObra(){
+  if(!obraAtiva||!obrasData[obraAtiva])return;
+  var o=obrasData[obraAtiva];
+  o.modelo=S.modelo;o.data=S.data;o.cliente=S.cliente;
+  o.activeTab=S.activeTab;
+  o.tampo=JSON.parse(JSON.stringify(S.tampo));
+  o.fundo=JSON.parse(JSON.stringify(S.fundo));
+  o.interno=S.interno.slice();
+  o.externo=S.externo.slice();
+  o.vernizTipo=S.vernizTipo;
+  o.camadas=S.camadas;
+}
+
+function carregarObra(id){
+  obraAtiva=id;
+  var o=obrasData[id]||{nome:'Nova obra'};
+  S.modelo=o.modelo||'';S.data=o.data||new Date().toISOString().slice(0,10);
+  S.cliente=o.cliente||'';S.activeTab=o.activeTab||'tampo';
+  S.tampo=(o.tampo&&o.tampo.length)?JSON.parse(JSON.stringify(o.tampo)):[{m1:'',m2:'',m5:'',peso:'',ffs:'',barra:''},{m1:'',m2:'',m5:'',peso:'',ffs:'',barra:''}];
+  S.fundo=(o.fundo&&o.fundo.length)?JSON.parse(JSON.stringify(o.fundo)):[{m1:'',m2:'',m5:'',peso:''},{m1:'',m2:'',m5:'',peso:''}];
+  S.interno=o.interno?o.interno.slice():[];
+  S.externo=o.externo?o.externo.slice():[];
+  S.vernizTipo=o.vernizTipo||'';S.camadas=o.camadas||0;
+  document.getElementById('f-modelo').value=S.modelo;
+  document.getElementById('f-cliente').value=S.cliente;
+  render();
+  preencherSelectObras();
+}
+
+function preencherSelectObras(){
+  var sel=document.getElementById('obra-select');if(!sel)return;
+  sel.innerHTML='';
+  Object.keys(obrasData).forEach(function(id){
+    var opt=document.createElement('option');
+    opt.value=id;opt.textContent=obrasData[id].nome||id;
+    if(id===obraAtiva)opt.selected=true;
+    sel.appendChild(opt);
+  });
+}
+
+function switchObra(id){
+  if(id===obraAtiva)return;
+  syncSparaObra();carregarObra(id);agendarSalvar();
+}
+
+function novaObra(){
+  var nome=prompt('Nome da nova obra:');if(!nome||!nome.trim())return;
+  nome=nome.trim();var id='obra_'+Date.now();
+  obrasData[id]={nome:nome,modelo:'',data:new Date().toISOString().slice(0,10),cliente:'',activeTab:'tampo',
+    tampo:[{m1:'',m2:'',m5:'',peso:'',ffs:'',barra:''},{m1:'',m2:'',m5:'',peso:'',ffs:'',barra:''}],
+    fundo:[{m1:'',m2:'',m5:'',peso:''},{m1:'',m2:'',m5:'',peso:''}],
+    interno:[],externo:[],vernizTipo:'',camadas:0};
+  salvarCloud();carregarObra(id);
+}
+
+function renomearObra(){
+  if(!obraAtiva||!obrasData[obraAtiva])return;
+  var nome=prompt('Novo nome:',obrasData[obraAtiva].nome||'');
+  if(!nome||!nome.trim())return;
+  obrasData[obraAtiva].nome=nome.trim();
+  preencherSelectObras();agendarSalvar();
+}
+
+function excluirObra(){
+  var ids=Object.keys(obrasData);
+  if(ids.length<=1){alert('Mantenha ao menos uma obra.');return;}
+  if(!confirm('Excluir "'+(obrasData[obraAtiva]?.nome||obraAtiva)+'" permanentemente?'))return;
+  delete obrasData[obraAtiva];
+  carregarObra(Object.keys(obrasData)[0]);salvarCloud();
+}
+
+// === CLOUD SAVE/LOAD (Firebase) ===
+var autoSaveTimer=null;
+var syncPendente=false;
+
+function setSyncStatus(tipo,texto){
+  var el=document.getElementById('sync-status');
+  if(!el)return;
+  el.className='sync-status sync-'+tipo;
+  el.textContent=texto;
+}
+
+function salvarCloud(){
+  if(syncPendente)return;
+  syncPendente=true;
+  syncSparaObra();
+  var data={obras:obrasData,currentObraId:obraAtiva};
+  console.log('Salvando no localStorage...');
+  localStorage.setItem('allegretto_obras',JSON.stringify(data));
+  console.log('Salvo no localStorage');
+  setSyncStatus('saving','⟳ Salvando...');
+  DOC_REF.set(data).then(function(){
+    console.log('Salvo no Firestore com sucesso');
+    setSyncStatus('saved','✓ Salvo na nuvem');
+    syncPendente=false;
+  }).catch(function(err){
+    console.error('Erro ao salvar no Firestore:', err);
+    setSyncStatus('error','✗ Erro ao salvar');
+    syncPendente=false;
+  });
+}
+
+function carregarCloud(){
+  setSyncStatus('saving','⟳ Carregando...');
+  var local=localStorage.getItem('allegretto_obras');
+  console.log('localStorage data:', local ? 'encontrado' : 'vazio');
+  if(local){
+    try{
+      var p=JSON.parse(local);
+      obrasData=p.obras||{};
+      obraAtiva=p.currentObraId||'';
+      if(Object.keys(obrasData).length===0){obrasData['padrao']={nome:'Obra padrão'};obraAtiva='padrao';}
+      if(!obrasData[obraAtiva])obraAtiva=Object.keys(obrasData)[0];
+      carregarObra(obraAtiva);
+      console.log('Carregado do localStorage, obra ativa:', obraAtiva);
+    }catch(e){console.error('Erro ao parsear localStorage:', e);}
+  }
+  console.log('Buscando do Firestore...');
+  DOC_REF.get().then(function(doc){
+    console.log('Firestore response recebida, doc.exists:', doc.exists);
+    if(doc.exists){
+      var data=doc.data();
+      if(data&&typeof data==='object'&&!data.obras){
+        if(Object.keys(data).some(function(k){return k==='modelo'||k==='tampo'||k==='fundo';})){
+          obrasData={};obrasData['importada']={nome:'Obra importada'};
+          Object.assign(obrasData['importada'],data);
+          obraAtiva='importada';
+        }
+      }else{
+        obrasData=data.obras||{};
+        obraAtiva=data.currentObraId||'';
+      }
+      if(Object.keys(obrasData).length===0){obrasData['padrao']={nome:'Obra padrão'};obraAtiva='padrao';}
+      Object.keys(obrasData).forEach(function(id){if(typeof obrasData[id]==='object'&&!obrasData[id].nome)obrasData[id].nome=id;});
+      if(!obrasData[obraAtiva])obraAtiva=Object.keys(obrasData)[0];
+      localStorage.setItem('allegretto_obras',JSON.stringify({obras:obrasData,currentObraId:obraAtiva}));
+      carregarObra(obraAtiva);
+      setSyncStatus('saved','✓ Sincronizado');
+    }else{
+      if(!local)setSyncStatus('idle','○ Nenhum dado na nuvem');else setSyncStatus('idle','○ Offline (cache)');
+    }
+  }).catch(function(err){
+    console.error(err);
+    if(local)setSyncStatus('idle','○ Offline (cache)');else setSyncStatus('error','✗ Sem conexão');
+  });
+}
+
+function agendarSalvar(){
+  if(autoSaveTimer)clearTimeout(autoSaveTimer);
+  autoSaveTimer=setTimeout(salvarCloud,10000);
+}
+
+function e(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function dv(a,b){if(a===''||b==='')return'—';var d=parseFloat(b)-parseFloat(a);return(d>=0?'+':'')+d.toFixed(1);}
+function dc(v){if(v==='—')return'diff-zero';return parseFloat(v)>0?'diff-pos':parseFloat(v)<0?'diff-neg':'diff-zero';}
+
+var WM='<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><g transform="translate(40,40) rotate(45)"><rect x="-26" y="-26" width="52" height="52" fill="none" stroke="#c9a227" stroke-width="2.5"/><rect x="-21" y="-21" width="42" height="42" fill="none" stroke="#c9a227" stroke-width="1"/><rect x="-18" y="-18" width="36" height="36" fill="none" stroke="#c9a227" stroke-width="1.5"/><rect x="-22" y="-4" width="8" height="8" fill="#c9a227"/><rect x="14" y="-4" width="8" height="8" fill="#c9a227"/><rect x="-4" y="-22" width="8" height="8" fill="#c9a227"/><rect x="-4" y="14" width="8" height="8" fill="#c9a227"/></g><text x="40" y="46" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#c9a227">A</text></svg>';
+
+function panelWrap(c){return '<div class="panel"><div class="panel-watermark">'+WM+'</div><div class="panel-content">'+c+'</div></div>';}
+
+function renderTable(type){
+  var isTampo=type==='tampo',rows=S[type];
+  var h='<div class="tbl-wrap"><table><thead><tr>';
+  h+='<th style="width:115px;text-align:left;padding-left:12px">Medição</th>';
+  [{l:'Modo 1',u:'Hz'},{l:'Modo 2',u:'Hz'},{l:'Modo 5',u:'Hz'},{l:'Peso',u:'g'}].forEach(function(c){
+    h+='<th>'+c.l+'<br><small style="font-weight:500;text-transform:none;letter-spacing:0;color:#9a7840">'+c.u+'</small></th>';
+  });
+  if(isTampo)h+='<th>FFS</th><th>Barra harm.</th>';
+  h+='</tr></thead><tbody>';
+  rows.forEach(function(row,i){
+    h+='<tr class="data-row"><td><span class="row-num">'+(i+1)+'</span>Medição '+(i+1)+'</td>';
+    ['m1','m2','m5','peso'].forEach(function(f){
+      h+='<td><input class="num-in" type="number" step="0.1" value="'+e(row[f])+'" onchange="setV(\''+type+'\','+i+',\''+f+'\',this.value)"></td>';
+    });
+    if(isTampo){
+      ['ffs','barra'].forEach(function(f){
+        var v=row[f],cls='sel-in'+(v==='sim'?' sel-sim':v==='nao'?' sel-nao':'');
+        h+='<td><select class="'+cls+'" onchange="setV(\''+type+'\','+i+',\''+f+'\',this.value);this.className=\'sel-in\'+(this.value===\'sim\'?\' sel-sim\':this.value===\'nao\'?\' sel-nao\':\'\')"><option value="">—</option><option value="sim"'+(v==='sim'?' selected':'')+'>Sim</option><option value="nao"'+(v==='nao'?' selected':'')+'>Não</option></select></td>';
+      });
+    }
+    h+='</tr>';
+    if(i>0){
+      var p=rows[i-1];
+      h+='<tr class="diff-row"><td>Δ '+(i)+'→'+(i+1)+'</td>';
+      ['m1','m2','m5','peso'].forEach(function(f){var d=dv(p[f],row[f]);h+='<td class="'+dc(d)+'">'+d+'</td>';});
+      if(isTampo)h+='<td>—</td><td>—</td>';
+      h+='</tr>';
+    }
+  });
+  h+='</tbody></table></div>';
+  h+='<button class="btn-add" onclick="addRow(\''+type+'\')"><svg width="13" height="13" viewBox="0 0 13 13" stroke="currentColor" fill="none" stroke-width="2.2"><line x1="6.5" y1="1" x2="6.5" y2="12"/><line x1="1" y1="6.5" x2="12" y2="6.5"/></svg> Nova medição</button>';
+  return h;
+}
+
+function renderResumoTampo(){
+  var rows=S.tampo;
+  var temAlgumDado=rows.some(function(r){return r.m1!==''||r.m2!==''||r.m5!==''||r.peso!==''||r.ffs!==''||r.barra!=='';});
+  if(rows.length<2){
+    if(temAlgumDado)return'<div class="resumo-empty-tampo">Adicione mais medições para visualizar as diferenças.</div>';
+    return'<div class="resumo-empty-tampo">Adicione pelo menos 2 medições para gerar o resumo de alterações.</div>';
+  }
+  var h='<div class="resumo-tampo"><div class="resumo-tampo-header"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Resumo das alterações — Tampo</div><div class="resumo-tampo-body">';
+  var temMudanca=false;
+  for(var i=1;i<rows.length;i++){
+    var p=rows[i-1],c=rows[i],parts=[];
+    [['m1','Modo 1','Hz'],['m2','Modo 2','Hz'],['m5','Modo 5','Hz']].forEach(function(fl){
+      var f=fl[0],lbl=fl[1],un=fl[2];
+      if(p[f]!==''&&c[f]!==''){
+        var d=parseFloat(c[f])-parseFloat(p[f]);
+        var arr=d>0?'↑':d<0?'↓':'→';
+        var cls=d>0?'diff-pos':d<0?'diff-neg':'diff-zero';
+        parts.push('<div class="resumo-row '+cls+'"><span class="resumo-label">'+lbl+':</span><span class="resumo-value">'+p[f]+' → '+c[f]+' '+un+'</span><span class="resumo-delta">'+(d>=0?'+':'')+d.toFixed(1)+' '+un+' '+arr+'</span></div>');
+      }
+    });
+    if(p.peso!==''&&c.peso!==''){
+      var pd=parseFloat(c.peso)-parseFloat(p.peso);
+      var parr=pd>0?'↑':pd<0?'↓':'→';
+      var pcls=pd>0?'diff-pos':pd<0?'diff-neg':'diff-zero';
+      parts.push('<div class="resumo-row '+pcls+'"><span class="resumo-label">Peso:</span><span class="resumo-value">'+p.peso+' → '+c.peso+' g</span><span class="resumo-delta">'+(pd>=0?'+':'')+pd.toFixed(1)+' g '+parr+'</span></div>');
+    }
+    if(p.ffs!==c.ffs){
+      var fcls,fdesc;
+      if(p.ffs===''&&c.ffs!==''){fcls=c.ffs==='sim'?'diff-active':'diff-inactive';fdesc=c.ffs==='sim'?'ativado':'marcado não';}
+      else if(p.ffs!==''&&c.ffs===''){fcls='diff-zero';fdesc='removido';}
+      else{fcls=c.ffs==='sim'?'diff-active':'diff-inactive';fdesc='alterado';}
+      parts.push('<div class="resumo-row '+fcls+'"><span class="resumo-label">FFS:</span><span class="resumo-value">'+(p.ffs||'—')+' → '+(c.ffs||'—')+'</span><span class="resumo-delta">'+fdesc+'</span></div>');
+    }
+    if(p.barra!==c.barra){
+      var bcls,bdesc;
+      if(p.barra===''&&c.barra!==''){bcls=c.barra==='sim'?'diff-active':'diff-inactive';bdesc=c.barra==='sim'?'ativada':'marcada não';}
+      else if(p.barra!==''&&c.barra===''){bcls='diff-zero';bdesc='removida';}
+      else{bcls=c.barra==='sim'?'diff-active':'diff-inactive';bdesc='alterada';}
+      parts.push('<div class="resumo-row '+bcls+'"><span class="resumo-label">Barra harm.:</span><span class="resumo-value">'+(p.barra||'—')+' → '+(c.barra||'—')+'</span><span class="resumo-delta">'+bdesc+'</span></div>');
+    }
+    if(parts.length>0){
+      temMudanca=true;
+      h+='<div class="resumo-card"><div class="resumo-card-title">Medição '+i+' → '+(i+1)+'</div><div class="resumo-grid">'+parts.join('')+'</div></div>';
+    }
+  }
+  if(!temMudanca)h+='<div class="resumo-empty-tampo">Nenhuma alteração detectada entre as medições preenchidas.</div>';
+  h+='</div></div>';
+  return h;
+}
+
+function renderTableMobile(type){
+  var isTampo=type==='tampo',rows=S[type];
+  var h='<div class="mob-list">';
+  rows.forEach(function(row,i){
+    h+='<div class="mob-card"><div class="mob-card-title"><span class="row-num">'+(i+1)+'</span>Medição '+(i+1)+'</div><div class="mob-card-grid">';
+    [{k:'m1',l:'Modo 1',u:'Hz'},{k:'m2',l:'Modo 2',u:'Hz'},{k:'m5',l:'Modo 5',u:'Hz'},{k:'peso',l:'Peso',u:'g'}].forEach(function(f){
+      h+='<div class="mob-field"><label>'+f.l+' <span class="mob-unit">'+f.u+'</span></label><input class="num-in" type="number" step="0.1" value="'+e(row[f.k])+'" onchange="setV(\''+type+'\','+i+',\''+f.k+'\',this.value)"></div>';
+    });
+    if(isTampo){
+      var fv=row.ffs,fcls='sel-in'+(fv==='sim'?' sel-sim':fv==='nao'?' sel-nao':'');
+      h+='<div class="mob-field"><label>FFS</label><select class="'+fcls+'" onchange="setV(\''+type+'\','+i+',\'ffs\',this.value);this.className=\'sel-in\'+(this.value===\'sim\'?\' sel-sim\':this.value===\'nao\'?\' sel-nao\':\'\')"><option value="">—</option><option value="sim"'+(fv==='sim'?' selected':'')+'>Sim</option><option value="nao"'+(fv==='nao'?' selected':'')+'>Não</option></select></div>';
+      var bv=row.barra,bcls='sel-in'+(bv==='sim'?' sel-sim':bv==='nao'?' sel-nao':'');
+      h+='<div class="mob-field"><label>Barra harm.</label><select class="'+bcls+'" onchange="setV(\''+type+'\','+i+',\'barra\',this.value);this.className=\'sel-in\'+(this.value===\'sim\'?\' sel-sim\':this.value===\'nao\'?\' sel-nao\':\'\')"><option value="">—</option><option value="sim"'+(bv==='sim'?' selected':'')+'>Sim</option><option value="nao"'+(bv==='nao'?' selected':'')+'>Não</option></select></div>';
+    }
+    h+='</div></div>';
+    if(i>0){
+      var p=rows[i-1];
+      h+='<div class="mob-diff"><div class="mob-diff-title">Diferenças Medição '+i+' → '+(i+1)+'</div><div class="mob-diff-grid">';
+      ['m1','m2','m5','peso'].forEach(function(f){
+        var d=dv(p[f],row[f]);
+        h+='<div class="mob-diff-row '+dc(d)+'"><span class="mob-diff-label">'+(f==='peso'?'Peso':'Modo '+f.charAt(1))+':</span><span class="mob-diff-value">'+d+(d!=='—'?(f==='peso'?' g':' Hz'):'')+'</span></div>';
+      });
+      if(isTampo){
+        h+='<div class="mob-diff-row"><span class="mob-diff-label">FFS:</span><span class="mob-diff-value">'+(p.ffs||'—')+' → '+(row.ffs||'—')+'</span></div>';
+        h+='<div class="mob-diff-row"><span class="mob-diff-label">Barra:</span><span class="mob-diff-value">'+(p.barra||'—')+' → '+(row.barra||'—')+'</span></div>';
+      }
+      h+='</div></div>';
+    }
+  });
+  h+='</div>';
+  h+='<button class="btn-add" onclick="addRow(\''+type+'\')"><svg width="13" height="13" viewBox="0 0 13 13" stroke="currentColor" fill="none" stroke-width="2.2"><line x1="6.5" y1="1" x2="6.5" y2="12"/><line x1="1" y1="6.5" x2="12" y2="6.5"/></svg> Nova medição</button>';
+  return h;
+}
+
+function renderAcabamento(){
+  var h='';
+  h+='<div class="sec-title">Preparação interna</div><div class="chk-grid">';
+  INTERNO.forEach(function(o){var chk=S.interno.indexOf(o)>=0;h+='<label class="chk-label'+(chk?' checked':'')+'"><input type="checkbox"'+(chk?' checked':'')+' onchange="toggleL(\'interno\',\''+e(o)+'\',this.checked);this.parentNode.classList.toggle(\'checked\',this.checked);renderResumo()"> '+e(o)+'</label>';});
+  h+='</div><div class="sec-title">Preparação externa</div><div class="chk-grid">';
+  EXTERNO.forEach(function(o){var chk=S.externo.indexOf(o)>=0;h+='<label class="chk-label'+(chk?' checked':'')+'"><input type="checkbox"'+(chk?' checked':'')+' onchange="toggleL(\'externo\',\''+e(o)+'\',this.checked);this.parentNode.classList.toggle(\'checked\',this.checked);renderResumo()"> '+e(o)+'</label>';});
+  h+='</div><div class="sec-title">Tipo de verniz</div><div class="verniz-tipos">';
+  [['oleo','Verniz a óleo'],['misto','Verniz misto']].forEach(function(pair){var sel=S.vernizTipo===pair[0];h+='<label class="vtype-card'+(sel?' selected':'')+'"><input type="radio" name="vtype" value="'+pair[0]+'"'+(sel?' checked':'')+' onchange="S.vernizTipo=this.value;render()"> '+pair[1]+'</label>';});
+  h+='</div><div class="sec-title">Número de demãos</div><div class="camadas-row"><label>Quantidade de passagens:</label>';
+  h+='<input type="number" min="0" max="50" value="'+S.camadas+'" onchange="S.camadas=parseInt(this.value)||0;renderResumo();agendarSalvar()">';
+  if(S.camadas>0)h+='<span class="badge-demao">'+S.camadas+' demão'+(S.camadas!==1?'s':'')+'</span>';
+  h+='</div><div id="resumo-area"></div>';
+  return h;
+}
+
+function renderResumo(){
+  var area=document.getElementById('resumo-area');if(!area)return;
+  var items=[];
+  S.interno.forEach(function(o){items.push({label:o,tag:'int',tagLabel:'Interno'});});
+  S.externo.forEach(function(o){items.push({label:o,tag:'ext',tagLabel:'Externo'});});
+  if(S.vernizTipo){var vl=S.vernizTipo==='oleo'?'Verniz a óleo':'Verniz misto',suf=S.camadas>0?' — '+S.camadas+' demão'+(S.camadas!==1?'s':''):'';items.push({label:vl+suf,tag:'verniz',tagLabel:'Verniz'});}
+  var h='<div class="resumo-box"><div class="resumo-header"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Sequência de acabamento selecionada</div><div class="resumo-body">';
+  if(items.length===0){h+='<div class="resumo-empty">Nenhum produto selecionado ainda.</div>';}
+  else{h+='<ol class="seq-list">';items.forEach(function(it,i){h+='<li class="seq-item"><span class="seq-num">'+(i+1)+'</span><span>'+e(it.label)+'</span><span class="seq-tag tag-'+it.tag+'">'+it.tagLabel+'</span></li>';});h+='</ol>';}
+  h+='</div></div>';
+  area.innerHTML=h;
+}
+
+function isMobile(){return window.matchMedia&&window.matchMedia('(max-width:768px)').matches;}
+function render(){
+  var p=document.getElementById('main-panel');if(!p)return;
+  var c='';
+  if(S.activeTab==='tampo')c=(isMobile()?renderTableMobile('tampo'):renderTable('tampo'))+renderResumoTampo();
+  else if(S.activeTab==='fundo')c=isMobile()?renderTableMobile('fundo'):renderTable('fundo');
+  else c=renderAcabamento();
+  p.innerHTML=panelWrap(c);
+  document.getElementById('f-data').value=S.data;
+  if(S.activeTab==='acabamento')renderResumo();
+  agendarSalvar();
+}
+
+function switchTab(t,el){S.activeTab=t;document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});el.classList.add('active');render();}
+function setV(type,idx,field,val){S[type][idx][field]=val;render();}
+function addRow(type){if(type==='tampo')S.tampo.push({m1:'',m2:'',m5:'',peso:'',ffs:'',barra:''});else S.fundo.push({m1:'',m2:'',m5:'',peso:''});render();}
+function toggleL(list,item,checked){var arr=S[list],idx=arr.indexOf(item);if(checked&&idx<0)arr.push(item);if(!checked&&idx>=0)arr.splice(idx,1);agendarSalvar();}
+
+function salvarJSON(){
+  syncSparaObra();salvarCloud();
+  var blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.download='allegretto_'+(obrasData[obraAtiva]?.nome||S.modelo||'medicoes').replace(/[^a-zA-Z0-9]/g,'_').slice(0,28)+'_'+S.data+'.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+function carregarJSON(){document.getElementById('file-input').click();}
+function lerArquivo(input){
+  var f=input.files[0];if(!f)return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      var dados=JSON.parse(ev.target.result);
+      var id='importada_'+Date.now();
+      var nome=dados.modelo||'Importada';
+      obrasData[id]={nome:nome,modelo:dados.modelo||'',data:dados.data||'',
+        cliente:dados.cliente||'',activeTab:dados.activeTab||'tampo',
+        tampo:(dados.tampo&&dados.tampo.length)?JSON.parse(JSON.stringify(dados.tampo)):[{m1:'',m2:'',m5:'',peso:'',ffs:'',barra:''},{m1:'',m2:'',m5:'',peso:'',ffs:'',barra:''}],
+        fundo:(dados.fundo&&dados.fundo.length)?JSON.parse(JSON.stringify(dados.fundo)):[{m1:'',m2:'',m5:'',peso:''},{m1:'',m2:'',m5:'',peso:''}],
+        interno:dados.interno?dados.interno.slice():[],
+        externo:dados.externo?dados.externo.slice():[],
+        vernizTipo:dados.vernizTipo||'',camadas:dados.camadas||0};
+      carregarObra(id);
+      salvarCloud();
+    }catch(err){alert('Arquivo inválido.');}
+  };
+  reader.readAsText(f);input.value='';
+}
+
+function exportarPDF(){
+  // Reutiliza o motor de impressão, mas com cabeçalho otimizado e instrução explícita "Salvar como PDF"
+  var w=window.open('','_blank');
+  function tblH(type){
+    var isTampo=type==='tampo',rows=S[type];
+    var h='<h3 style="margin:18px 0 8px;font-size:11px;color:#8a6a30;text-transform:uppercase;letter-spacing:.1em;border-bottom:2px solid #c9a227;padding-bottom:5px">'+(isTampo?'▲ Tampo':'▽ Fundo')+'</h3>';
+    h+='<table style="width:100%;border-collapse:collapse;font-size:11.5px"><thead><tr style="background:#f0e8d0">';
+    h+='<th style="padding:6px 8px;border:1px solid #d8ccb0;text-align:left;color:#6a4e20;font-size:10px;text-transform:uppercase;letter-spacing:.07em">Medição</th>';
+    ['Modo 1 (Hz)','Modo 2 (Hz)','Modo 5 (Hz)','Peso (g)'].forEach(function(l){h+='<th style="padding:6px 8px;border:1px solid #d8ccb0;color:#6a4e20;font-size:10px;text-transform:uppercase;letter-spacing:.07em">'+l+'</th>';});
+    if(isTampo)h+='<th style="padding:6px 8px;border:1px solid #d8ccb0;color:#6a4e20;font-size:10px">FFS</th><th style="padding:6px 8px;border:1px solid #d8ccb0;color:#6a4e20;font-size:10px">Barra harm.</th>';
+    h+='</tr></thead><tbody>';
+    rows.forEach(function(row,i){
+      h+='<tr><td style="padding:6px 8px;border:1px solid #e8e0cc;color:#4a3a22;font-weight:600">Medição '+(i+1)+'</td>';
+      ['m1','m2','m5','peso'].forEach(function(f){h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:600;color:#1a1208">'+(row[f]||'—')+'</td>';});
+      if(isTampo){
+        var fCol=row.ffs==='sim'?'#1a5e2e':row.ffs==='nao'?'#7a1a1a':'#9a8060';
+        var bCol=row.barra==='sim'?'#1a5e2e':row.barra==='nao'?'#7a1a1a':'#9a8060';
+        h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:700;color:'+fCol+'">'+(row.ffs||'—')+'</td>';
+        h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:700;color:'+bCol+'">'+(row.barra||'—')+'</td>';
+      }
+      h+='</tr>';
+      if(i>0){
+        var p=rows[i-1];
+        h+='<tr style="background:#e8f0fa"><td style="padding:4px 8px;border:1px solid #ccdaf5;font-size:10px;color:#3a5fa8;font-weight:700">Δ '+(i)+'→'+(i+1)+'</td>';
+        ['m1','m2','m5','peso'].forEach(function(f){var d=dv(p[f],row[f]);var col=d==='—'?'#9a8060':parseFloat(d)>0?'#1a6e3a':parseFloat(d)<0?'#a02020':'#9a8060';h+='<td style="padding:4px 8px;border:1px solid #ccdaf5;text-align:center;font-weight:700;color:'+col+'">'+d+'</td>';});
+        if(isTampo)h+='<td style="border:1px solid #ccdaf5"></td><td style="border:1px solid #ccdaf5"></td>';
+        h+='</tr>';
+      }
+    });
+    return h+'</tbody></table>';
+  }
+  var seqItems=[];
+  S.interno.forEach(function(o){seqItems.push({label:o,tag:'Interno',color:'#1a5e2e',bg:'#eaf7ee',border:'#5ab870'});});
+  S.externo.forEach(function(o){seqItems.push({label:o,tag:'Externo',color:'#1a3a7e',bg:'#eaeffa',border:'#6090d8'});});
+  if(S.vernizTipo){var vl=S.vernizTipo==='oleo'?'Verniz a óleo':'Verniz misto',suf=S.camadas>0?' — '+S.camadas+' demão'+(S.camadas!==1?'s':''):'';seqItems.push({label:vl+suf,tag:'Verniz',color:'#7a4a08',bg:'#fffaed',border:'#c9a227'});}
+  var seqH='';
+  if(seqItems.length>0){
+    seqH='<h3 style="margin:22px 0 10px;font-size:11px;color:#8a6a30;text-transform:uppercase;letter-spacing:.1em;border-bottom:2px solid #c9a227;padding-bottom:5px">◆ Sequência de acabamento</h3>';
+    seqItems.forEach(function(it,i){seqH+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #e8e0cc"><span style="width:23px;height:23px;border-radius:50%;background:#c9a227;color:#1a1208;font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">'+(i+1)+'</span><span style="flex:1;font-size:13px;font-weight:600;color:#2a1e0a">'+it.label+'</span><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:'+it.bg+';color:'+it.color+';border:1.5px solid '+it.border+'">'+it.tag+'</span></div>';});
+  }
+  var logoSvg='<svg width="48" height="48" viewBox="0 0 80 80"><g transform="translate(40,40) rotate(45)"><rect x="-26" y="-26" width="52" height="52" fill="none" stroke="#c9a227" stroke-width="2.5"/><rect x="-21" y="-21" width="42" height="42" fill="none" stroke="#c9a227" stroke-width="1"/><rect x="-18" y="-18" width="36" height="36" fill="none" stroke="#c9a227" stroke-width="1.5"/><rect x="-22" y="-4" width="8" height="8" fill="#c9a227"/><rect x="14" y="-4" width="8" height="8" fill="#c9a227"/><rect x="-4" y="-22" width="8" height="8" fill="#c9a227"/><rect x="-4" y="14" width="8" height="8" fill="#c9a227"/></g><text x="40" y="46" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#1a1208">A</text></svg>';
+  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Relatório PDF — Atelier Allegretto</title><style>body{font-family:Segoe UI,sans-serif;padding:28px;color:#1a1208;background:#fdfaf3}@media print{body{padding:14px}@page{margin:1.2cm}}.pdf-hint{background:#fffaed;border:1px solid #c9a227;color:#7a4a08;padding:8px 12px;border-radius:6px;font-size:11px;margin-bottom:14px;text-align:center;font-weight:600}</style></head><body>');
+  w.document.write('<div class="pdf-hint">📄 Na caixa de impressão, escolha <b>"Salvar como PDF"</b> como destino para gerar o arquivo.</div>');
+  w.document.write('<div style="display:flex;align-items:center;gap:16px;border-bottom:2px solid #c9a227;padding-bottom:14px;margin-bottom:16px;background:#1a1208;padding:16px;border-radius:8px">'+logoSvg+'<div><div style="font-size:20px;font-weight:300;letter-spacing:.14em;font-family:Georgia,serif;color:#fff">Atelier Allegretto</div><div style="font-size:10px;color:#c9a227;letter-spacing:.28em;text-transform:uppercase;margin-top:2px">Lutheria — Relatório de Medições</div></div></div>');
+  w.document.write('<div style="display:flex;gap:28px;margin-bottom:16px;font-size:12px;color:#6a4e20;flex-wrap:wrap"><span><b>Modelo:</b> '+(S.modelo||'—')+'</span><span><b>Data:</b> '+(S.data||'—')+'</span><span><b>Cliente:</b> '+(S.cliente||'—')+'</span></div>');
+  w.document.write(tblH('tampo')+tblH('fundo')+seqH);
+  w.document.write('<div style="margin-top:24px;padding-top:12px;border-top:1px solid #d8ccb0;font-size:10px;color:#9a8060;text-align:center;letter-spacing:.1em">— Atelier Allegretto Lutheria —</div>');
+  w.document.write('</body></html>');
+  w.document.close();w.focus();setTimeout(function(){w.print();},500);
+}
+
+function imprimir(){
+  var w=window.open('','_blank');
+  function tblH(type){
+    var isTampo=type==='tampo',rows=S[type];
+    var h='<h3 style="margin:18px 0 8px;font-size:11px;color:#8a6a30;text-transform:uppercase;letter-spacing:.1em;border-bottom:2px solid #c9a227;padding-bottom:5px">'+(isTampo?'▲ Tampo':'▽ Fundo')+'</h3>';
+    h+='<table style="width:100%;border-collapse:collapse;font-size:11.5px"><thead><tr style="background:#f0e8d0">';
+    h+='<th style="padding:6px 8px;border:1px solid #d8ccb0;text-align:left;color:#6a4e20;font-size:10px;text-transform:uppercase;letter-spacing:.07em">Medição</th>';
+    ['Modo 1 (Hz)','Modo 2 (Hz)','Modo 5 (Hz)','Peso (g)'].forEach(function(l){h+='<th style="padding:6px 8px;border:1px solid #d8ccb0;color:#6a4e20;font-size:10px;text-transform:uppercase;letter-spacing:.07em">'+l+'</th>';});
+    if(isTampo)h+='<th style="padding:6px 8px;border:1px solid #d8ccb0;color:#6a4e20;font-size:10px">FFS</th><th style="padding:6px 8px;border:1px solid #d8ccb0;color:#6a4e20;font-size:10px">Barra harm.</th>';
+    h+='</tr></thead><tbody>';
+    rows.forEach(function(row,i){
+      h+='<tr><td style="padding:6px 8px;border:1px solid #e8e0cc;color:#4a3a22;font-weight:600">Medição '+(i+1)+'</td>';
+      ['m1','m2','m5','peso'].forEach(function(f){h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:600;color:#1a1208">'+(row[f]||'—')+'</td>';});
+      if(isTampo){
+        var fCol=row.ffs==='sim'?'#1a5e2e':row.ffs==='nao'?'#7a1a1a':'#9a8060';
+        var bCol=row.barra==='sim'?'#1a5e2e':row.barra==='nao'?'#7a1a1a':'#9a8060';
+        h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:700;color:'+fCol+'">'+(row.ffs||'—')+'</td>';
+        h+='<td style="padding:6px 8px;border:1px solid #e8e0cc;text-align:center;font-weight:700;color:'+bCol+'">'+(row.barra||'—')+'</td>';
+      }
+      h+='</tr>';
+      if(i>0){
+        var p=rows[i-1];
+        h+='<tr style="background:#e8f0fa"><td style="padding:4px 8px;border:1px solid #ccdaf5;font-size:10px;color:#3a5fa8;font-weight:700">Δ '+(i)+'→'+(i+1)+'</td>';
+        ['m1','m2','m5','peso'].forEach(function(f){var d=dv(p[f],row[f]);var col=d==='—'?'#9a8060':parseFloat(d)>0?'#1a6e3a':parseFloat(d)<0?'#a02020':'#9a8060';h+='<td style="padding:4px 8px;border:1px solid #ccdaf5;text-align:center;font-weight:700;color:'+col+'">'+d+'</td>';});
+        if(isTampo)h+='<td style="border:1px solid #ccdaf5"></td><td style="border:1px solid #ccdaf5"></td>';
+        h+='</tr>';
+      }
+    });
+    return h+'</tbody></table>';
+  }
+  var seqItems=[];
+  S.interno.forEach(function(o){seqItems.push({label:o,tag:'Interno',color:'#1a5e2e',bg:'#eaf7ee',border:'#5ab870'});});
+  S.externo.forEach(function(o){seqItems.push({label:o,tag:'Externo',color:'#1a3a7e',bg:'#eaeffa',border:'#6090d8'});});
+  if(S.vernizTipo){var vl=S.vernizTipo==='oleo'?'Verniz a óleo':'Verniz misto',suf=S.camadas>0?' — '+S.camadas+' demão'+(S.camadas!==1?'s':''):'';seqItems.push({label:vl+suf,tag:'Verniz',color:'#7a4a08',bg:'#fffaed',border:'#c9a227'});}
+  var seqH='';
+  if(seqItems.length>0){
+    seqH='<h3 style="margin:22px 0 10px;font-size:11px;color:#8a6a30;text-transform:uppercase;letter-spacing:.1em;border-bottom:2px solid #c9a227;padding-bottom:5px">◆ Sequência de acabamento</h3>';
+    seqItems.forEach(function(it,i){seqH+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #e8e0cc"><span style="width:23px;height:23px;border-radius:50%;background:#c9a227;color:#1a1208;font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">'+(i+1)+'</span><span style="flex:1;font-size:13px;font-weight:600;color:#2a1e0a">'+it.label+'</span><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:'+it.bg+';color:'+it.color+';border:1.5px solid '+it.border+'">'+it.tag+'</span></div>';});
+  }
+  var logoSvg='<svg width="52" height="52" viewBox="0 0 80 80"><g transform="translate(40,40) rotate(45)"><rect x="-26" y="-26" width="52" height="52" fill="none" stroke="#c9a227" stroke-width="2.5"/><rect x="-21" y="-21" width="42" height="42" fill="none" stroke="#c9a227" stroke-width="1"/><rect x="-18" y="-18" width="36" height="36" fill="none" stroke="#c9a227" stroke-width="1.5"/><rect x="-22" y="-4" width="8" height="8" fill="#c9a227"/><rect x="14" y="-4" width="8" height="8" fill="#c9a227"/><rect x="-4" y="-22" width="8" height="8" fill="#c9a227"/><rect x="-4" y="14" width="8" height="8" fill="#c9a227"/></g><text x="40" y="46" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#1a1208">A</text></svg>';
+  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Medições — Atelier Allegretto</title><style>body{font-family:Segoe UI,sans-serif;padding:28px;color:#1a1208;background:#fdfaf3}@media print{body{padding:16px}}</style></head><body>');
+  w.document.write('<div style="display:flex;align-items:center;gap:16px;border-bottom:2px solid #c9a227;padding-bottom:14px;margin-bottom:16px;background:#1a1208;padding:16px;border-radius:8px">'+logoSvg+'<div><div style="font-size:20px;font-weight:300;letter-spacing:.14em;font-family:Georgia,serif;color:#fff">Atelier Allegretto</div><div style="font-size:10px;color:#c9a227;letter-spacing:.28em;text-transform:uppercase;margin-top:2px">Lutheria</div></div></div>');
+  w.document.write('<div style="display:flex;gap:28px;margin-bottom:16px;font-size:12px;color:#6a4e20"><span><b>Modelo:</b> '+(S.modelo||'—')+'</span><span><b>Data:</b> '+(S.data||'—')+'</span><span><b>Cliente:</b> '+(S.cliente||'—')+'</span></div>');
+  w.document.write(tblH('tampo')+tblH('fundo')+seqH);
+  w.document.write('</body></html>');
+  w.document.close();w.focus();setTimeout(function(){w.print();},400);
+}
+
+var local=localStorage.getItem('allegretto_obras');
+if(!local){
+  obrasData['padrao']={nome:'Obra padrão'};
+  obraAtiva='padrao';
+  carregarObra('padrao');
+}
+carregarCloud();
+</script>
+</body>
+</html>
