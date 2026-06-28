@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador HTML - Cloud</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="login-panel" class="login-panel hidden">
+        <div class="login-box">
+            <div class="login-icon">ðŸ”’</div>
+            <h2>Gerenciador HTML Cloud</h2>
+            <p class="login-sub">Digite seu login e senha</p>
+            <div class="form-group">
+                <label>UsuÃ¡rio:</label>
+                <input type="text" id="login-user" placeholder="seu-usuario">
+            </div>
+            <div class="form-group">
+                <label>Senha:</label>
+                <input type="password" id="login-pass" placeholder="sua-senha" onkeydown="if(event.key==='Enter')app.login()">
+            </div>
+            <button onclick="app.login()" class="btn btn-primary btn-full">Entrar</button>
+            <p class="login-hint">Primeiro acesso? Crie uma conta nova.</p>
+        </div>
+    </div>
+
+    <div id="app">
+        <header>
+            <h1>Gerenciador HTML Cloud</h1>
+            <div class="header-actions">
+                <span id="status"></span>
+                <button onclick="app.showSettings()" class="btn btn-sm">âš™ ConfiguraÃ§Ãµes</button>
+                <button onclick="app.logout()" class="btn btn-sm btn-danger">ðŸšª Sair</button>
+                <button onclick="app.createFile()" class="btn btn-primary">+ Novo Arquivo</button>
+            </div>
+        </header>
+
+        <div id="settings-panel" class="hidden">
+            <h2>ConfiguraÃ§Ãµes do GitHub</h2>
+            <p class="help-text">Para usar o salvamento automÃ¡tico, configure seu GitHub Personal Access Token.</p>
+            <div class="form-group">
+                <label>UsuÃ¡rio GitHub:</label>
+                <input type="text" id="gh-user" placeholder="seu-usuario">
+            </div>
+            <div class="form-group">
+                <label>RepositÃ³rio:</label>
+                <input type="text" id="gh-repo" placeholder="html-files">
+            </div>
+            <div class="form-group">
+                <label>Personal Access Token:</label>
+                <input type="password" id="gh-token" placeholder="ghp_xxxx">
+            </div>
+            <div class="form-group">
+                <label>Pasta no repositÃ³rio (opcional):</label>
+                <input type="text" id="gh-folder" placeholder="arquivos" value="arquivos">
+            </div>
+            <button onclick="app.saveSettings()" class="btn btn-primary">Salvar ConfiguraÃ§Ãµes</button>
+            <button onclick="app.hideSettings()" class="btn">Cancelar</button>
+        </div>
+
+        <div id="file-list-container">
+            <div class="tabs-main">
+                <button class="tab-main-btn active" onclick="app.switchMainTab('files', this)">ðŸ“ Arquivos</button>
+                <button class="tab-main-btn" onclick="app.switchMainTab('freq', this)">ðŸŽµ Gerador de FrequÃªncias</button>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="search" placeholder="Buscar arquivos..." oninput="app.filterFiles()">
+                <button onclick="app.refreshFiles()" class="btn btn-sm">ðŸ”„ Atualizar</button>
+            </div>
+            <div id="file-list"></div>
+            <div id="empty-state" class="hidden">
+                <p>Nenhum arquivo encontrado.</p>
+                <button onclick="app.createFile()" class="btn btn-primary">Criar primeiro arquivo</button>
+            </div>
+        </div>
+
+        <div id="freq-container" class="hidden">
+            <div class="freq-frame-wrap">
+                <iframe id="freq-frame" srcdoc=""></iframe>
+            </div>
+        </div>
+
+        <div id="editor-container" class="hidden">
+            <div class="editor-header">
+                <input type="text" id="file-name" placeholder="nome-do-arquivo.html">
+                <div class="editor-actions">
+                    <label class="autosave-toggle">
+                        <input type="checkbox" id="autosave" checked> Auto-save
+                    </label>
+                    <button onclick="app.saveFile()" class="btn btn-primary">ðŸ’¾ Salvar</button>
+                    <button onclick="app.openFile()" class="btn">ðŸ‘ Abrir</button>
+                    <button onclick="app.openFileRaw()" class="btn">ðŸ”— Link Direto</button>
+                    <button onclick="app.closeEditor()" class="btn btn-danger">âœ• Fechar</button>
+                </div>
+            </div>
+            <div class="editor-body">
+                <div class="editor-pane">
+                    <label>CÃ³digo HTML:</label>
+                    <textarea id="editor" spellcheck="false" oninput="app.onEditorInput()"></textarea>
+                </div>
+                <div class="preview-pane">
+                    <label>Preview:</label>
+                    <iframe id="preview"></iframe>
+                </div>
+            </div>
+            <div class="editor-footer">
+                <span id="save-status"></span>
+                <span id="file-info"></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
