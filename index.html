@@ -219,6 +219,37 @@ tr.diff-row td:first-child{text-align:left;padding-left:12px;font-size:11px;colo
   .panel{border:none}
 }
 
+/* Frequency Generator */
+#freq-panel .panel{padding:18px;margin-top:14px}
+.fg-wrap{max-width:620px;margin:0 auto}
+.fg-card{background:#fff;border:1px solid #e0deda;border-radius:12px;padding:16px 20px;margin-bottom:12px}
+.fg-sec{font-size:11px;font-weight:500;color:#888780;letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px}
+.fg-lbl{font-size:12px;color:#888780}
+.fg-big{font-size:40px;font-weight:500;font-family:Consolas,monospace;color:#1a1a18;letter-spacing:-1px}
+.fg-note{font-size:16px;color:#888780;margin-left:10px;font-family:Consolas,monospace}
+.fg-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.fg-col{display:flex;flex-direction:column;gap:5px}
+.fg-status{display:flex;align-items:center;gap:6px;margin-top:4px}
+.fg-dot{width:8px;height:8px;border-radius:50%;background:#d0ceca;flex-shrink:0}
+.fg-dot.play{background:#3b8f4e}
+.fg-dot.sweep{background:#b07d1a}
+.fg-stxt{font-size:12px;color:#888780}
+#freq-panel input[type=range]{flex:1;min-width:100px;height:4px;accent-color:#2c6fbf;cursor:pointer}
+#freq-panel input[type=number]{padding:6px 10px;border-radius:7px;border:1px solid #d0ceca;background:#f9f9f7;color:#1a1a18;font-size:13px;font-family:Consolas,monospace;width:80px}
+#freq-panel input[type=number]:focus{outline:2px solid #2c6fbf;outline-offset:1px}
+.fg-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;border-radius:8px;border:1px solid #c8c6c0;background:#fff;font-size:14px;font-weight:500;color:#1a1a18;cursor:pointer;margin-top:2px}
+.fg-btn:hover{background:#f5f5f2}
+.fg-btn.on-play{background:#e6f5ea;border-color:#7ecb8e;color:#1f6631}
+.fg-btn.on-sweep{background:#fdf2da;border-color:#e8c060;color:#7a5210}
+.fg-dir{padding:5px 13px;border-radius:7px;border:1px solid #d0ceca;background:#fff;font-size:13px;color:#888780;cursor:pointer}
+.fg-dir:hover{background:#f5f5f2}
+.fg-dir.active{background:#ddeaf9;border-color:#88b0e0;color:#1a4f8a;font-weight:500}
+.fg-sinfo{font-size:12px;color:#888780;font-family:Consolas,monospace;margin:6px 0 4px}
+.fg-barw{height:6px;background:#f0ede8;border-radius:3px;border:1px solid #e0deda;overflow:hidden;margin:8px 0 12px}
+.fg-bar{height:100%;background:#e8a820;border-radius:3px;width:0%;transition:width .12s linear}
+.fg-vdisp{font-size:13px;font-weight:500;min-width:44px;text-align:right;color:#1a1a18}
+#freq-panel canvas{display:block;width:100%;height:60px;background:#f5f5f2;border:1px solid #e0deda;border-radius:8px;margin-top:12px}
+
 /* Obra bar & cloud sync */
 .obra-bar{display:flex;align-items:center;gap:10px;padding:10px 0;flex-wrap:wrap}
 .obra-select{padding:7px 10px;border:1.5px solid #d0c4a0;border-radius:8px;font-size:13px;font-weight:600;color:#1a1208;background:#faf6ec;cursor:pointer;min-width:180px}
@@ -654,8 +685,7 @@ function switchTab(t,el){S.activeTab=t;document.querySelectorAll('.tab-btn').for
 function renderFreqGenerator(){
   var fp=document.getElementById('freq-panel');
   fp.innerHTML='<div class="panel"><div class="panel-content"><div id="freq-gen-app"></div></div></div>';
-  var h='<style>.fg-wrap{max-width:620px;margin:0 auto}.fg-card{background:#fff;border:1px solid #e0deda;border-radius:12px;padding:16px 20px;margin-bottom:12px}.fg-sec{font-size:11px;font-weight:500;color:#888780;letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px}.fg-lbl{font-size:12px;color:#888780}.fg-big{font-size:40px;font-weight:500;font-family:Consolas,monospace;color:#1a1a18;letter-spacing:-1px}.fg-note{font-size:16px;color:#888780;margin-left:10px;font-family:Consolas,monospace}.fg-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}.fg-col{display:flex;flex-direction:column;gap:5px}.fg-status{display:flex;align-items:center;gap:6px;margin-top:4px}.fg-dot{width:8px;height:8px;border-radius:50%;background:#d0ceca;flex-shrink:0}.fg-dot.play{background:#3b8f4e}.fg-dot.sweep{background:#b07d1a}.fg-stxt{font-size:12px;color:#888780}input[type=range]{flex:1;min-width:100px;height:4px;accent-color:#2c6fbf;cursor:pointer}input[type=number]{padding:6px 10px;border-radius:7px;border:1px solid #d0ceca;background:#f9f9f7;color:#1a1a18;font-size:13px;font-family:Consolas,monospace;width:80px}input[type=number]:focus{outline:2px solid #2c6fbf;outline-offset:1px}.fg-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;border-radius:8px;border:1px solid #c8c6c0;background:#fff;font-size:14px;font-weight:500;color:#1a1a18;cursor:pointer;margin-top:2px}.fg-btn:hover{background:#f5f5f2}.fg-btn.on-play{background:#e6f5ea;border-color:#7ecb8e;color:#1f6631}.fg-btn.on-sweep{background:#fdf2da;border-color:#e8c060;color:#7a5210}.fg-dir{padding:5px 13px;border-radius:7px;border:1px solid #d0ceca;background:#fff;font-size:13px;color:#888780;cursor:pointer}.fg-dir:hover{background:#f5f5f2}.fg-dir.active{background:#ddeaf9;border-color:#88b0e0;color:#1a4f8a;font-weight:500}.fg-sinfo{font-size:12px;color:#888780;font-family:Consolas,monospace;margin:6px 0 4px}.fg-barw{height:6px;background:#f0ede8;border-radius:3px;border:1px solid #e0deda;overflow:hidden;margin:8px 0 12px}.fg-bar{height:100%;background:#e8a820;border-radius:3px;width:0%;transition:width .12s linear}.fg-vdisp{font-size:13px;font-weight:500;min-width:44px;text-align:right;color:#1a1a18}canvas{display:block;width:100%;height:60px;background:#f5f5f2;border:1px solid #e0deda;border-radius:8px;margin-top:12px}</style>';
-  h+='<div class="fg-wrap"><h2 style="font-size:18px;font-weight:500;color:#1a1a18;margin-bottom:16px">Gerador de Frequências</h2>';
+  var h='<div class="fg-wrap"><h2 style="font-size:18px;font-weight:500;color:#1a1a18;margin-bottom:16px">Gerador de Frequências</h2>';
   h+='<div class="fg-card"><div style="display:flex;align-items:baseline;justify-content:space-between"><div><span class="fg-big" id="fg-dispFreq">440.00</span><span style="font-size:20px;color:#888780;font-family:monospace"> Hz</span><span class="fg-note" id="fg-dispNote">A4</span></div></div>';
   h+='<div class="fg-status"><span class="fg-dot" id="fg-sdot"></span><span class="fg-stxt" id="fg-statusTxt">parado</span></div>';
   h+='<canvas id="fg-wc"></canvas></div>';
@@ -666,9 +696,9 @@ function renderFreqGenerator(){
   h+='<div class="fg-card"><div class="fg-sec">Varredura automática</div>';
   h+='<div class="fg-row" style="gap:14px"><div class="fg-col"><span class="fg-lbl">De (Hz)</span><input type="number" id="fg-swFrom" min="65" max="1500" value="65" step="1"></div><div class="fg-col"><span class="fg-lbl">Até (Hz)</span><input type="number" id="fg-swTo" min="65" max="1500" value="1500" step="1"></div><div class="fg-col"><span class="fg-lbl">Passo (Hz)</span><input type="number" id="fg-swStep" min="1" max="200" value="5" step="1"></div><div class="fg-col"><span class="fg-lbl">Intervalo (s)</span><input type="number" id="fg-swInterval" min="0.1" max="10" value="1" step="0.1"></div></div>';
   h+='<div class="fg-row" style="margin-top:4px;gap:8px"><span class="fg-lbl">Direção:</span><button class="fg-dir active" id="fg-dirUp" onclick="fgSetDir(\'up\')">&#8593; Subindo</button><button class="fg-dir" id="fg-dirDown" onclick="fgSetDir(\'down\')">&#8595; Descendo</button><button class="fg-dir" id="fg-dirBounce" onclick="fgSetDir(\'bounce\')">&#8597; Ida e volta</button></div>';
-  h+='<div class="fg-sinfo" id="fg-stepInfo">65 Hz → 1500 Hz ↑, passo 5 Hz, a cada 1.0 s</div><div class="fg-barw"><div class="fg-bar" id="fg-sweepBar"></div></div>';
+  h+='<div class="fg-sinfo" id="fg-stepInfo">65 Hz - 1500 Hz, passo 5 Hz, a cada 1.0 s</div><div class="fg-barw"><div class="fg-bar" id="fg-sweepBar"></div></div>';
   h+='<button class="fg-btn" id="fg-btnSweep"><span id="fg-sweepTxt">Iniciar varredura</span></button></div></div>';
-  document.getElementById('fg-gen-app').innerHTML=h;
+  document.getElementById('freq-gen-app').innerHTML=h;
   fgInit();
 }
 
